@@ -10,7 +10,8 @@ export function Button({
 }: Props) {
   return (
     <button
-      className="flex justify-center items-center bg-surface-dark text-white text-xl cursor-pointer hover:bg-text-on-bg transition ease-linear"
+      className="flex justify-center items-center bg-surface-dark
+      border border-surface-dark rounded-3xl w-full h-12 text-white text-xl cursor-pointer hover:bg-text-on-bg transition ease-linear"
       type={type}
       disabled={isLoading}
       {...rest}

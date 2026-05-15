@@ -13,7 +13,7 @@ export function Input({ legend, type = "text", ...rest }: Props) {
       <input
         type={type}
         className={
-          "border border-gray-300 rounded-lg px-4 py-3.75 w-full h-12 text-sm text-gray-100 bg-transparent outline-none focus:border-2 focus:border-surface-dark placeholder-gray-300"
+          "border border-gray-300 rounded-3xl px-4 py-3.75 w-full h-12 text-sm text-gray-600  outline-none focus:border-2 focus:border-surface-dark placeholder-gray-600/90 bg-white placeholder:uppercase font-bold"
         }
         {...rest}
       />
