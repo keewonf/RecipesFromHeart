@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --default-font-family: "Alice", serif;
+
+  --color-surface-dark: #573824;
+  --color-surface-light: #f0e8c2;
+
+  --color-text-primary: #291b1a;
+  --color-text-secondary: #573a37;
+  --color-text-on-bg: #f0e8c2;
+}
