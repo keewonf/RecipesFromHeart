@@ -3,9 +3,11 @@ import logoSvg from "../assets/logo.svg";
 
 export function AuthLayout() {
   return (
-    <div className="w-screen min-h-screen bg-surface-light flex flex-col justify-center items-center text-text-primary md:min-w-115.5">
-      <img src={logoSvg} alt="logo" className="mb-8" />
-      <Outlet />
+    <div className="w-screen min-h-screen bg-surface-light flex flex-col justify-center items-center text-text-primary ">
+      <main className="p-8 rounded-md flex items-center flex-col md:min-w-115.5">
+        <img src={logoSvg} alt="logo" className="mb-8" />
+        <Outlet />
+      </main>
     </div>
   );
 }
