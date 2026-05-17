@@ -2,13 +2,13 @@ import { Sidebar } from "./Sidebar";
 
 export function AppLayout() {
   return (
-    <div className="grid h-screen grid-cols-[minmax(220px,280px)_1fr] grid-rows-[auto_1fr]">
-      <Sidebar className="row-span-2 border-r" />
-      <header>
+    <div className="flex min-h-screen flex-col bg-surface-light md:grid md:grid-cols-[minmax(150px,200px)_1fr] md:grid-rows-[auto_1fr]">
+      <Sidebar className="w-full border-b p-3 md:row-span-2 md:w-auto md:border-b-0 md:border-r" />
+      <header className="bg-surface-light p-3">
         <button>Notificações</button>
         <span>Imagem</span>
       </header>
-      <main>
+      <main className="bg-surface-light p-3">
         <h1>Minhas receitas</h1>
         <div>
           <h2>Cupcake</h2>
