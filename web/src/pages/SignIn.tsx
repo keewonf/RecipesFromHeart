@@ -31,10 +31,12 @@ export function SignIn() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col gap-4 "
-    >
+    <>
+      <h1 className="mb-8 text-3xl font-bold text-text-secondary">Login</h1>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full flex flex-col gap-4 "
+      >
       <Controller
         control={control}
         name="email"
@@ -66,6 +68,7 @@ export function SignIn() {
       >
         Ainda não tem conta? Crie uma!
       </Link>
-    </form>
+      </form>
+    </>
   );
 }
