@@ -23,7 +23,7 @@ export function SignIn() {
   });
 
   return (
-    <form className="w-full flex flex-col gap-4">
+    <form className="w-full flex flex-col gap-4 ">
       <Controller
         control={control}
         name="email"
@@ -39,12 +39,18 @@ export function SignIn() {
           <Input required type="password" placeholder="senha" {...field} />
         )}
       />
-      <Link className="text-surface-dark ml-auto font-bold" to="/help">
+      <Link
+        className="text-surface-dark ml-auto font-bold hover:text-text-primary"
+        to="/help"
+      >
         Esqueci a senha
       </Link>
       <Button type="submit">Entrar</Button>
 
-      <Link className="text-surface-dark font-bold" to="/signup">
+      <Link
+        className="text-surface-dark font-bold m-auto hover:text-text-primary"
+        to="/signup"
+      >
         Ainda não tem conta? Crie uma!
       </Link>
     </form>
