@@ -14,7 +14,11 @@ const signInSchema = z.object({
 type FormData = z.infer<typeof signInSchema>;
 
 export function SignIn() {
-  const { control, handleSubmit } = useForm<FormData>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<FormData>({
     defaultValues: {
       email: "",
       password: "",
@@ -22,8 +26,15 @@ export function SignIn() {
     resolver: zodResolver(signInSchema),
   });
 
+  async function onSubmit(data: FormData) {
+    console.log(data);
+  }
+
   return (
-    <form className="w-full flex flex-col gap-4 ">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full flex flex-col gap-4 "
+    >
       <Controller
         control={control}
         name="email"
@@ -45,7 +56,9 @@ export function SignIn() {
       >
         Esqueci a senha
       </Link>
-      <Button type="submit">Entrar</Button>
+      <Button isLoading={isSubmitting} type="submit">
+        Entrar
+      </Button>
 
       <Link
         className="text-surface-dark font-bold m-auto hover:text-text-primary"
