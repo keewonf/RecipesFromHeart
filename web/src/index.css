@@ -4,6 +4,7 @@
   --default-font-family: "Alice", serif;
 
   --color-surface-dark: #573824;
+  --color-surface-light-dark: #f0e3c0;
   --color-surface-light: #f0e8c2;
 
   --color-text-primary: #291b1a;
@@ -11,8 +12,13 @@
   --color-text-on-bg: #f0e8c2;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+html,
+body,
+#root {
+  min-height: 100%;
+  background: #f0e8c2;
+}
+
+body {
+  min-height: 100vh;
 }
