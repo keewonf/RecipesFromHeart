@@ -10,3 +10,9 @@
   --color-text-secondary: #573a37;
   --color-text-on-bg: #f0e8c2;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
