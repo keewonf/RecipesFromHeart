@@ -46,56 +46,60 @@ export function SignUp() {
 
   return (
     <>
-      <h1 className="mb-8 text-3xl font-bold text-text-secondary">Registre-se</h1>
+      <h1 className="mb-8 text-3xl font-bold text-text-secondary">
+        Registre-se
+      </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-4 "
       >
-      <Controller
-        control={control}
-        name="name"
-        render={({ field }) => <Input required placeholder="Nome" {...field} />}
-      />
+        <Controller
+          control={control}
+          name="name"
+          render={({ field }) => (
+            <Input required placeholder="Nome" {...field} />
+          )}
+        />
 
-      <Controller
-        control={control}
-        name="email"
-        render={({ field }) => (
-          <Input required type="email" placeholder="Email" {...field} />
-        )}
-      />
+        <Controller
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <Input required type="email" placeholder="Email" {...field} />
+          )}
+        />
 
-      <Controller
-        control={control}
-        name="password"
-        render={({ field }) => (
-          <Input required type="password" placeholder="senha" {...field} />
-        )}
-      />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field }) => (
+            <Input required type="password" placeholder="senha" {...field} />
+          )}
+        />
 
-      <Controller
-        control={control}
-        name="confirmPassword"
-        render={({ field }) => (
-          <Input
-            required
-            type="password"
-            placeholder="Confirmar senha"
-            {...field}
-          />
-        )}
-      />
+        <Controller
+          control={control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <Input
+              required
+              type="password"
+              placeholder="Confirmar senha"
+              {...field}
+            />
+          )}
+        />
 
-      <Button isLoading={isSubmitting} type="submit">
-        Entrar
-      </Button>
+        <Button isLoading={isSubmitting} type="submit">
+          Entrar
+        </Button>
 
-      <Link
-        className="text-surface-dark font-bold m-auto hover:text-text-primary"
-        to="/signin"
-      >
-        Já tem conta? Faça Login!
-      </Link>
+        <Link
+          className="text-surface-dark font-bold m-auto hover:text-text-primary"
+          to="/"
+        >
+          Já tem conta? Faça Login!
+        </Link>
       </form>
     </>
   );
