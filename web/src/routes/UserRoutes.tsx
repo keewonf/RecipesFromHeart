@@ -9,7 +9,7 @@ export function UserRoutes() {
   return (
     <Routes>
       <Route path="/" element={<AppLayout />}>
-        <Route path="/recipes" element={<MyRecipes />} />
+        <Route path="/recipes/me" element={<MyRecipes />} />
         <Route path="/recipes/new" element={<CreateRecipe />} />
       </Route>
       <Route path="*" element={<NotFound />} />
