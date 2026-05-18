@@ -6,7 +6,7 @@ export function Input({ legend, type = "text", ...rest }: Props) {
   return (
     <fieldset className="flex flex-1 text-surface-dark flex-col">
       {legend && (
-        <legend className="uppercase text-xxs mb-2 text-inherit">
+        <legend className="uppercase text-xxs mb-2 text-text-primary">
           {legend}
         </legend>
       )}
