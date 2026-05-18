@@ -10,11 +10,11 @@ type SidebarProps = {
 export function Sidebar({ className }: SidebarProps) {
   return (
     <aside className={classMerge(["bg-surface-light-dark", className])}>
-      <div className="my-10 flex items-center justify-center">
+      <div className="my-4 flex items-center justify-center">
         <img src={logoSvg} alt="logo" />
       </div>
 
-      <nav className="text-surface-dark font-bold text-xl">
+      <nav className="text-surface-dark font-bold text-xl mt-8">
         <ul className="flex flex-col gap-7">
           <li>
             <NavLink
