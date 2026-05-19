@@ -2,8 +2,10 @@ import { Route, Routes } from "react-router";
 import { AppLayout } from "../components/AppLayout";
 
 import { NotFound } from "../pages/NotFound";
-import MyRecipes from "../pages/recipes/MyRecipes";
+import { MyRecipes } from "../pages/recipes/MyRecipes";
 import { CreateRecipe } from "../pages/recipes/CreateRecipe";
+import { CommunityRecipes } from "../pages/recipes/CommunityRecipes";
+import { RecipePreview } from "../pages/recipes/RecipePreview";
 
 export function UserRoutes() {
   return (
@@ -11,6 +13,8 @@ export function UserRoutes() {
       <Route path="/" element={<AppLayout />}>
         <Route path="/recipes/me" element={<MyRecipes />} />
         <Route path="/recipes/new" element={<CreateRecipe />} />
+        <Route path="/recipes/community" element={<CommunityRecipes />} />
+        <Route path="/recipes/preview" element={<RecipePreview />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
