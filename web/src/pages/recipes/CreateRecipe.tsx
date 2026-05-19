@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { RecipeImageInput } from "../../components/recipes/RecipeImageInput";
 import type { CreateRecipeData, IngredientData } from "../../dtos/recipe";
 
 export const ingredientSchema = z.object({
@@ -19,6 +20,9 @@ export const createRecipeSchema = z.object({
   resume: z.string().trim().min(1, "Adicione um resumo para sua receita"),
   preparationTime: z.coerce.number().positive("Selecione um número válido"),
   portions: z.coerce.number().positive("Selecione um número válido"),
+  image: z.custom<File>((value) => value instanceof File, {
+    message: "Selecione uma imagem da receita",
+  }),
   ingredients: z
     .array(ingredientSchema)
     .min(1, "Adicione pelo menos um ingrediente"),
@@ -57,6 +61,7 @@ export function CreateRecipe() {
       resume: "",
       preparationTime: "",
       portions: "",
+      image: undefined,
       preparationMethod: "",
       ingredients: [
         {
@@ -87,7 +92,7 @@ export function CreateRecipe() {
   });
 
   function onSubmit(data: FormOutput) {
-    console.log(data);
+    navigate("/recipes/preview", { state: data });
   }
 
   return (
@@ -182,6 +187,21 @@ export function CreateRecipe() {
               )}
             />
           </div>
+
+          <Controller
+            control={control}
+            name="image"
+            render={({ field, fieldState }) => (
+              <RecipeImageInput
+                file={field.value}
+                error={fieldState.error?.message}
+                onChange={field.onChange}
+                name={field.name}
+                onBlur={field.onBlur}
+                ref={field.ref}
+              />
+            )}
+          />
 
           <section className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
