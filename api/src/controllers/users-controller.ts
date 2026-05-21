@@ -85,6 +85,10 @@ class UsersController {
 
     const data = bodySchema.parse(req.body);
 
+    if (!data.name && !data.newPassword) {
+      throw new AppError("Nenhum dado enviado para atualização", 400);
+    }
+
     if (!req.user) {
       throw new AppError("Usuário não encontrado", 401);
     }
@@ -116,7 +120,7 @@ class UsersController {
         );
 
         if (!passwordMatch) {
-          throw new AppError("Senha atual incorreta", 401);
+          throw new AppError("Credenciais inválidas", 401);
         }
 
         const hashedPassword = await hash(data.newPassword, 8);
