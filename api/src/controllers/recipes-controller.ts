@@ -354,7 +354,7 @@ class RecipesController {
     }
 
     if (Object.keys(data).length === 0) {
-      return res.json("Nenhum contéudo para atualizar");
+      throw new AppError("Nenhum conteúdo para atualizar", 400);
     }
 
     const user = await prisma.user.findUnique({
@@ -450,7 +450,7 @@ class RecipesController {
       });
     });
 
-    return res.json({ updatedRecipe });
+    return res.json({ recipe: updatedRecipe });
   }
 
   async delete(req: Request, res: Response) {
