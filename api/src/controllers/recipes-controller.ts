@@ -125,6 +125,12 @@ const paramsSchema = z.object({
   id: z.uuid("ID da receita inválido"),
 });
 
+const querySchema = z.object({
+  name: z.string().trim().optional().default(""),
+  page: z.coerce.number().int().positive().optional().default(1),
+  perPage: z.coerce.number().int().positive().max(50).optional().default(8),
+});
+
 class RecipesController {
   async create(req: Request, res: Response) {
     const data = bodySchema.parse(req.body);
@@ -199,6 +205,10 @@ class RecipesController {
   }
 
   async index(req: Request, res: Response) {
+    const { name, page, perPage } = querySchema.parse(req.query);
+
+    const skip = (page - 1) * perPage;
+
     if (!req.user) {
       throw new AppError("Usuário não encontrado", 401);
     }
@@ -214,8 +224,18 @@ class RecipesController {
     }
 
     const recipes = await prisma.recipe.findMany({
+      skip,
+      take: perPage,
       where: {
         userId: user.id,
+        ...(name
+          ? {
+              title: {
+                contains: name,
+                mode: "insensitive",
+              },
+            }
+          : {}),
       },
       orderBy: {
         createdAt: "desc",
@@ -239,6 +259,10 @@ class RecipesController {
   }
 
   async community(req: Request, res: Response) {
+    const { name, page, perPage } = querySchema.parse(req.query);
+
+    const skip = (page - 1) * perPage;
+
     if (!req.user) {
       throw new AppError("Usuário não encontrado", 401);
     }
@@ -254,8 +278,18 @@ class RecipesController {
     }
 
     const recipes = await prisma.recipe.findMany({
+      skip,
+      take: perPage,
       where: {
         isPublic: true,
+        ...(name
+          ? {
+              title: {
+                contains: name,
+                mode: "insensitive",
+              },
+            }
+          : {}),
       },
       orderBy: {
         createdAt: "desc",
@@ -405,7 +439,10 @@ class RecipesController {
       throw new AppError("Receita não encontrada", 404);
     }
 
-    if (recipe.userId !== req.user.id) {
+    const isOwner = recipe.userId === req.user.id;
+    const isAdmin = req.user.role === "ADMIN";
+
+    if (!isOwner && !isAdmin) {
       throw new AppError("Receita não encontrada", 404);
     }
 
@@ -484,7 +521,10 @@ class RecipesController {
       throw new AppError("Receita não encontrada", 404);
     }
 
-    if (recipe.userId !== req.user.id) {
+    const isOwner = recipe.userId === req.user.id;
+    const isAdmin = req.user.role === "ADMIN";
+
+    if (!isOwner && !isAdmin) {
       throw new AppError("Receita não encontrada", 404);
     }
 
