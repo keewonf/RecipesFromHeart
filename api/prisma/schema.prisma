@@ -46,6 +46,7 @@ model Recipe {
   portions Int
   
   preparationMethod String @map("preparation_method")
+  isPublic Boolean @default(true) @map("is_public")
   
   imageUrl String? @map("image_url")
   imageKey String? @map("image_key")
