@@ -2,7 +2,7 @@ import { RecipeList } from "../../components/recipes/RecipeList";
 import { useRecipes } from "../../hooks/useRecipes";
 
 export function CommunityRecipes() {
-  const { recipes, loading, loadMore } = useRecipes({ type: "mine" });
+  const { recipes, loading } = useRecipes({ type: "community" });
 
   return (
     <div className="p-4">
@@ -12,7 +12,7 @@ export function CommunityRecipes() {
         </h1>
       </div>
 
-      <RecipeList recipes={recipes} loading={loading} onLoadMore={loadMore} />
+      <RecipeList recipes={recipes} loading={loading} />
     </div>
   );
 }

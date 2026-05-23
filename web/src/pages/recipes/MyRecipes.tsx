@@ -3,7 +3,7 @@ import { RecipeList } from "../../components/recipes/RecipeList";
 import { useRecipes } from "../../hooks/useRecipes";
 
 export function MyRecipes() {
-  const { recipes, loading, loadMore } = useRecipes({ type: "mine" });
+  const { recipes, loading } = useRecipes({ type: "mine" });
 
   return (
     <div className="p-4">
@@ -19,8 +19,10 @@ export function MyRecipes() {
         </Link>
       </div>
 
-      <RecipeList recipes={recipes} loading={loading} onLoadMore={loadMore} />
+      <RecipeList
+        recipes={recipes}
+        loading={loading}
+      />
     </div>
   );
 }
-
