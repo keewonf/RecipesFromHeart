@@ -128,7 +128,7 @@ const paramsSchema = z.object({
 const querySchema = z.object({
   name: z.string().trim().optional().default(""),
   page: z.coerce.number().int().positive().optional().default(1),
-  perPage: z.coerce.number().int().positive().max(50).optional().default(8),
+  perPage: z.coerce.number().int().positive().max(50).optional().default(10),
 });
 
 class RecipesController {
