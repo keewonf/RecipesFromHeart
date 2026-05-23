@@ -7,7 +7,7 @@ type RecipeListProps = {
   loading?: boolean;
 };
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 10;
 
 export function RecipeList({ recipes, loading }: RecipeListProps) {
   const [page, setPage] = useState(1);
