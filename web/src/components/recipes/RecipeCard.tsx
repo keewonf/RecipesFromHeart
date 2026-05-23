@@ -1,10 +1,29 @@
+import { useNavigate } from "react-router";
+
 type RecipeCardProps = {
   recipe: any;
 };
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
+  const navigate = useNavigate();
+
+  function handleOpenPreview() {
+    navigate("/recipes/preview", { state: recipe });
+  }
+
   return (
-    <article className="w-full bg-surface-light rounded-lg overflow-hidden shadow-[0_2px_12px_rgba(41,27,26,0.12)] p-3">
+    <article
+      className="w-full cursor-pointer bg-surface-light rounded-lg overflow-hidden shadow-[0_2px_12px_rgba(41,27,26,0.12)] p-3 transition-transform duration-200 hover:-translate-y-1"
+      role="button"
+      tabIndex={0}
+      onClick={handleOpenPreview}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleOpenPreview();
+        }
+      }}
+    >
       <div className="h-36 bg-gray-100 flex items-center justify-center">
         {/* Placeholder imagem */}
         <span className="text-sm ">Imagem</span>

@@ -1,8 +1,10 @@
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
+import { Download } from "lucide-react";
 
 import recipeImg from "../../assets/main-image.png";
 import bgImg from "../../assets/bg-image.jpg";
+import { Button } from "../../components/Button";
 
 type RecipePreviewState = {
   title: string;
@@ -17,6 +19,10 @@ type RecipePreviewState = {
     note?: string;
   }>;
   preparationMethod: string;
+};
+
+type RecipePreviewLocationState = Partial<RecipePreviewState> & {
+  image?: File | null;
 };
 
 const recipeExample: RecipePreviewState = {
@@ -52,7 +58,10 @@ const recipeExample: RecipePreviewState = {
 
 export function RecipePreview() {
   const location = useLocation();
-  const recipe = (location.state as RecipePreviewState | null) ?? recipeExample;
+  const recipe = {
+    ...recipeExample,
+    ...(location.state as RecipePreviewLocationState | null),
+  };
 
   const previewImageUrl = useMemo(() => {
     if (!recipe.image) {
@@ -72,12 +81,21 @@ export function RecipePreview() {
     };
   }, [previewImageUrl, recipe.image]);
 
+  function handleDownloadHtml() {
+    console.log("cliquei aqui");
+  }
+
   return (
     <div
       className="flex flex-col justify-center items-center m-0 bg-text-on-bg bg-cover"
       style={{ backgroundImage: `url(${bgImg})` }}
     >
       <div className="w-200 p-6 bg-surface-light rounded-3xl flex flex-col mt-12 mb-7 text-text-secondary">
+        <div className="mb-4 flex items-center justify-end">
+          <Button variant="icon" onClick={handleDownloadHtml}>
+            <Download />
+          </Button>
+        </div>
         <img
           className="object-contain w-full h-100 rounded-2xl mb-6"
           src={previewImageUrl}
