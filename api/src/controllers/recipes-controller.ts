@@ -255,7 +255,31 @@ class RecipesController {
       },
     });
 
-    return res.json({ recipes });
+    const totalRecords = await prisma.recipe.count({
+      where: {
+        userId: user.id,
+        ...(name
+          ? {
+              title: {
+                contains: name,
+                mode: "insensitive",
+              },
+            }
+          : {}),
+      },
+    });
+
+    const totalPages = Math.ceil(totalRecords / perPage);
+
+    return res.json({
+      recipes,
+      pagination: {
+        page,
+        perPage,
+        totalRecords,
+        totalPages: totalPages > 0 ? totalPages : 1,
+      },
+    });
   }
 
   async community(req: Request, res: Response) {
@@ -314,7 +338,31 @@ class RecipesController {
       },
     });
 
-    return res.json({ recipes });
+    const totalRecords = await prisma.recipe.count({
+      where: {
+        isPublic: true,
+        ...(name
+          ? {
+              title: {
+                contains: name,
+                mode: "insensitive",
+              },
+            }
+          : {}),
+      },
+    });
+
+    const totalPages = Math.ceil(totalRecords / perPage);
+
+    return res.json({
+      recipes,
+      pagination: {
+        page,
+        perPage,
+        totalRecords,
+        totalPages: totalPages > 0 ? totalPages : 1,
+      },
+    });
   }
 
   async show(req: Request, res: Response) {
