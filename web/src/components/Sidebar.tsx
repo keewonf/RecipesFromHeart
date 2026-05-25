@@ -54,7 +54,7 @@ export function Sidebar({ className }: SidebarProps) {
           </li>
           <li>
             <NavLink
-              to="/profile"
+              to="/profile/me"
               className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
             >
               <User />
