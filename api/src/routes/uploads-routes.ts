@@ -9,6 +9,16 @@ const uploadsController = new UploadsController();
 
 const upload = multer(uploadConfig.MULTER);
 
-uploadsRoutes.post("/", upload.single("file"), uploadsController.create);
+uploadsRoutes.post(
+	"/recipes",
+	upload.single("file"),
+	uploadsController.createRecipeImage,
+);
+
+uploadsRoutes.post(
+	"/profile",
+	upload.single("file"),
+	uploadsController.createProfileImage,
+);
 
 export { uploadsRoutes };

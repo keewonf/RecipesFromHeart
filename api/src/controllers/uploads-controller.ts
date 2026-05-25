@@ -6,7 +6,11 @@ import { DiskStorage } from "@/providers/disk-storage";
 import { AppError } from "@/utils/AppError";
 
 class UploadsController {
-  async create(req: Request, res: Response) {
+  private async uploadFile(
+    req: Request,
+    res: Response,
+    folder: "recipes" | "profiles",
+  ) {
     const cloudinaryStorage = new CloudinaryStorage();
     const diskStorage = new DiskStorage();
 
@@ -29,6 +33,7 @@ class UploadsController {
       const cloudinaryFile = await cloudinaryStorage.saveFile(
         file.path,
         file.filename,
+        folder,
       );
 
       await diskStorage.deleteTmpFile(file.filename);
@@ -48,6 +53,14 @@ class UploadsController {
       }
       throw error;
     }
+  }
+
+  async createRecipeImage(req: Request, res: Response) {
+    return this.uploadFile(req, res, "recipes");
+  }
+
+  async createProfileImage(req: Request, res: Response) {
+    return this.uploadFile(req, res, "profiles");
   }
 }
 

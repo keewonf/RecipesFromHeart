@@ -1,13 +1,19 @@
 import { cloudinary } from "@/configs/cloudinary";
 import { AppError } from "@/utils/AppError";
 
+type CloudinaryFolder = "recipes" | "profiles";
+
 class CloudinaryStorage {
-  async saveFile(filePath: string, fileName: string) {
+  async saveFile(
+    filePath: string,
+    fileName: string,
+    folder: CloudinaryFolder = "recipes",
+  ) {
     try {
       const result = await cloudinary.uploader.upload(filePath, {
         public_id: fileName.replace(/\.[^/.]+$/, ""),
         resource_type: "auto",
-        folder: "recipes",
+        folder,
       });
 
       return {
