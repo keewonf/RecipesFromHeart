@@ -7,18 +7,19 @@ type RecipeListProps = {
   loading?: boolean;
 };
 
-const PAGE_SIZE = 10;
+const PER_PAGE = 10;
 
 export function RecipeList({ recipes, loading }: RecipeListProps) {
   const [page, setPage] = useState(1);
   const totalOfPage = useMemo(
-    () => Math.max(1, Math.ceil(recipes.length / PAGE_SIZE)),
+    () => Math.max(1, Math.ceil(recipes.length / PER_PAGE)),
     [recipes.length],
   );
 
+
   const currentRecipes = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return recipes.slice(start, start + PAGE_SIZE);
+    const start = (page - 1) * PER_PAGE;
+    return recipes.slice(start, start + PER_PAGE);
   }, [page, recipes]);
 
   function handlePagination(action: "next" | "previous") {
