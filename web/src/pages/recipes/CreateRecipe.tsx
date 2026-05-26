@@ -1,30 +1,42 @@
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
+import { AxiosError } from "axios";
 
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { Loading } from "../../components/Loading";
 import { RecipeImageInput } from "../../components/recipes/RecipeImageInput";
 import { api } from "../../services/api";
-import { AxiosError } from "axios";
-import type { CreateRecipeResponse, UploadAPIResponse } from "../../dtos/recipe";
+import type {
+  CreateRecipeResponse,
+  RecipeResponse,
+  RecipeSummaryData,
+  UploadAPIResponse,
+} from "../../dtos/recipe";
 
 export const ingredientSchema = z.object({
-  quantity: z.string().trim().min(1, "Informe a quantidade").max(50, "Quantidade muito longa"),
+  quantity: z
+    .string()
+    .trim()
+    .min(1, "Informe a quantidade")
+    .max(50, "Quantidade muito longa"),
   unit: z.string().trim().max(30, "Unidade muito longa").optional(),
   name: z.string().trim().min(1, "Informe o ingrediente"),
   note: z.string().trim().max(120, "Observação muito longa").optional(),
 });
 
-export const createRecipeSchema = z.object({
+export const recipeFormFieldsSchema = z.object({
   title: z.string().trim().min(5, "Bote um título descritivo"),
   resume: z.string().trim().min(5, "Adicione um resumo para sua receita"),
-  preparationTime: z.coerce.number().int().positive("Selecione um número válido"),
+  preparationTime: z.coerce
+    .number()
+    .int()
+    .positive("Selecione um número válido"),
   portions: z.coerce.number().int().positive("Selecione um número válido"),
-  image: z.instanceof(File, {
-    message: "Selecione uma imagem da receita",
-  }),
+  image: z.instanceof(File).nullable(),
   ingredients: z
     .array(ingredientSchema)
     .min(1, "Adicione pelo menos um ingrediente"),
@@ -34,8 +46,8 @@ export const createRecipeSchema = z.object({
     .min(10, "Defina um método de preparo detalhado!"),
 });
 
-type FormInput = z.input<typeof createRecipeSchema>;
-type FormOutput = z.output<typeof createRecipeSchema>;
+type FormInput = z.input<typeof recipeFormFieldsSchema>;
+type FormOutput = z.output<typeof recipeFormFieldsSchema>;
 
 function normalizeNumberInputValue(value: unknown): string | number {
   if (typeof value === "number" && Number.isFinite(value)) {
@@ -49,20 +61,63 @@ function normalizeNumberInputValue(value: unknown): string | number {
   return "";
 }
 
+function mapRecipeToFormValues(recipe: RecipeSummaryData): FormInput {
+  return {
+    title: recipe.title,
+    resume: recipe.resume,
+    preparationTime: recipe.preparationTime,
+    portions: recipe.portions,
+    image: null,
+    preparationMethod: recipe.preparationMethod,
+    ingredients: recipe.ingredients.map((ingredient) => ({
+      quantity: ingredient.quantity,
+      unit: ingredient.unit ?? "",
+      name: ingredient.name,
+      note: ingredient.note ?? "",
+    })),
+  };
+}
+
 export function CreateRecipe() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = useParams<{ id: string }>();
+  const isEditing = Boolean(params.id);
+
+  const initialRecipe = location.state as RecipeSummaryData | null;
+  const [editingRecipe, setEditingRecipe] = useState<RecipeSummaryData | null>(
+    initialRecipe,
+  );
+  const [isLoadingRecipe, setIsLoadingRecipe] = useState(
+    isEditing && !initialRecipe,
+  );
+
+  const recipeSchema = useMemo(() => {
+    return recipeFormFieldsSchema.superRefine((data, context) => {
+      if (!isEditing && !data.image) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["image"],
+          message: "Selecione uma imagem da receita",
+        });
+      }
+    });
+  }, [isEditing]);
+
   const {
     control,
     handleSubmit,
+    reset,
     setError,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<FormInput, unknown, FormOutput>({
-    resolver: zodResolver(createRecipeSchema),
+    resolver: zodResolver(recipeSchema),
     defaultValues: {
       title: "",
       resume: "",
       preparationTime: "",
       portions: "",
-      image: undefined,
+      image: null,
       preparationMethod: "",
       ingredients: [
         {
@@ -75,46 +130,114 @@ export function CreateRecipe() {
     },
   });
 
-  const navigate = useNavigate();
-
-  function handleCancel() {
-    if (confirm("Deseja realmente cancelar a criação da receita?")) {
-      if (window.history.length > 1) {
-        navigate(-1);
-      } else {
-        navigate("/recipes");
-      }
-    }
-  }
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "ingredients",
   });
 
+  useEffect(() => {
+    if (!isEditing || !params.id) {
+      return;
+    }
+
+    if (editingRecipe) {
+      reset(mapRecipeToFormValues(editingRecipe));
+      setIsLoadingRecipe(false);
+      return;
+    }
+
+    let isMounted = true;
+
+    async function loadRecipe() {
+      setIsLoadingRecipe(true);
+
+      try {
+        const response = await api.get<RecipeResponse>(`/recipes/${params.id}`);
+
+        if (!isMounted) {
+          return;
+        }
+
+        setEditingRecipe(response.data.recipe);
+        reset(mapRecipeToFormValues(response.data.recipe));
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        if (error instanceof AxiosError) {
+          const message =
+            error.response?.data?.message ?? "Erro de conexão com o servidor";
+          setError("root", {
+            message,
+          });
+        } else {
+          setError("root", {
+            message: "Erro inesperado. Tente novamente",
+          });
+        }
+
+        navigate("/recipes/me", { replace: true });
+      } finally {
+        if (isMounted) {
+          setIsLoadingRecipe(false);
+        }
+      }
+    }
+
+    void loadRecipe();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [editingRecipe, isEditing, navigate, params.id, reset, setError]);
+
   async function onSubmit(data: FormOutput) {
     try {
-      if (!data.image) {
-        return alert("Não existem dados para enviar");
+      let imageUrl = editingRecipe?.imageUrl ?? null;
+      let imageKey = editingRecipe?.imageKey ?? null;
+
+      if (data.image) {
+        const imageUploadForm = new FormData();
+        imageUploadForm.append("file", data.image);
+
+        const response = await api.post<UploadAPIResponse>(
+          "/uploads/recipes",
+          imageUploadForm,
+        );
+
+        imageUrl = response.data.imageUrl;
+        imageKey = response.data.imageKey;
       }
 
-      const imageUploadForm = new FormData();
-      imageUploadForm.append("file", data.image);
-
-      const response = await api.post<UploadAPIResponse>(
-        "/uploads/recipes",
-        imageUploadForm,
-      );
+      if (!isEditing && !imageUrl) {
+        setError("image", {
+          message: "Selecione uma imagem da receita",
+        });
+        return;
+      }
 
       const { image, ...recipeData } = data;
-
-      const createRecipeResponse = await api.post<CreateRecipeResponse>("/recipes", {
+      const payload = {
         ...recipeData,
-        imageKey: response.data.imageKey,
-        imageUrl: response.data.imageUrl,
-      });
+        imageUrl,
+        imageKey,
+      };
 
-      navigate("/recipes/preview", { state: createRecipeResponse.data.recipe });
+      const response =
+        isEditing && params.id
+          ? await api.patch<CreateRecipeResponse>(
+              `/recipes/${params.id}`,
+              payload,
+            )
+          : await api.post<CreateRecipeResponse>("/recipes", payload);
+
+      navigate("/recipes/preview", {
+        state: {
+          recipe: response.data.recipe,
+          showEditButton: true,
+        },
+      });
     } catch (error) {
       if (error instanceof AxiosError) {
         const message =
@@ -128,29 +251,46 @@ export function CreateRecipe() {
       setError("root", {
         message: "Erro inesperado. Tente novamente",
       });
-
-      return;
     }
+  }
+
+  function handleCancel() {
+    const confirmMessage = isEditing
+      ? "Deseja realmente cancelar a edição da receita?"
+      : "Deseja realmente cancelar a criação da receita?";
+
+    if (confirm(confirmMessage)) {
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate("/recipes/me");
+      }
+    }
+  }
+
+  if (isLoadingRecipe) {
+    return <Loading />;
   }
 
   return (
     <div className="p-4">
-      <main className="mx-auto flex w-full max-w-4xl  flex-col gap-6 rounded-3xl bg-surface-light p-6 shadow-[0_2px_12px_rgba(41,27,26,0.12)]">
-        <div className="flex items-start justify-between">
+      <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 rounded-3xl bg-surface-light p-6 shadow-[0_2px_12px_rgba(41,27,26,0.12)]">
+        <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-text-primary">
-              Nova receita
+              {isEditing ? "Editar receita" : "Nova receita"}
             </h1>
             <p className="mt-2 text-xl text-text-primary">
-              Insira os dados da sua receita
+              {isEditing
+                ? "Revise os dados da sua receita e salve as alterações"
+                : "Insira os dados da sua receita"}
             </p>
           </div>
 
           <button
             type="button"
             onClick={handleCancel}
-            className="text-xl text-text-primary/80 hover:text-text-primary transition-colors duration-150 cursor-pointer
-            font-bold"
+            className="cursor-pointer text-xl font-bold text-text-primary/80 transition-colors duration-150 hover:text-text-primary"
           >
             Voltar
           </button>
@@ -232,6 +372,7 @@ export function CreateRecipe() {
             render={({ field, fieldState }) => (
               <RecipeImageInput
                 file={field.value}
+                previewUrl={editingRecipe?.imageUrl ?? null}
                 error={fieldState.error?.message}
                 onChange={field.onChange}
                 name={field.name}
@@ -257,7 +398,7 @@ export function CreateRecipe() {
                 onClick={() =>
                   append({ quantity: "", unit: "", name: "", note: "" })
                 }
-                className="cursor-pointer rounded-3xl border border-surface-dark px-4 py-2 text-sm font-semibold text-surface-dark transition-colors duration-200 bg-surface-light-dark hover:bg-surface-dark hover:text-white"
+                className="cursor-pointer rounded-3xl border border-surface-dark bg-surface-light-dark px-4 py-2 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-surface-dark hover:text-white"
               >
                 Adicionar ingrediente
               </button>
@@ -357,9 +498,13 @@ export function CreateRecipe() {
             )}
           />
 
+          <p className="min-h-5 text-sm font-medium text-red-600">
+            {errors.root?.message}
+          </p>
+
           <div className="flex justify-end">
             <Button type="submit" isLoading={isSubmitting}>
-              Salvar receita
+              {isEditing ? "Salvar alterações" : "Salvar receita"}
             </Button>
           </div>
         </form>

@@ -6,6 +6,7 @@ type Props = Omit<
 > & {
   legend?: string;
   file?: File | null;
+  previewUrl?: string | null;
   error?: string;
   onChange: (file: File | null) => void;
 };
@@ -13,26 +14,29 @@ type Props = Omit<
 export function RecipeImageInput({
   legend = "Imagem da receita",
   file = null,
+  previewUrl = null,
   error,
   onChange,
   id = "recipe-image",
   ...rest
 }: Props) {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [resolvedPreviewUrl, setResolvedPreviewUrl] = useState<string | null>(
+    previewUrl,
+  );
 
   useEffect(() => {
     if (!file) {
-      setPreviewUrl(null);
+      setResolvedPreviewUrl(previewUrl);
       return;
     }
 
     const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
+    setResolvedPreviewUrl(objectUrl);
 
     return () => {
       URL.revokeObjectURL(objectUrl);
     };
-  }, [file]);
+  }, [file, previewUrl]);
 
   return (
     <fieldset className="flex flex-col text-surface-dark">
@@ -57,9 +61,9 @@ export function RecipeImageInput({
         className="group flex min-h-64 cursor-pointer flex-col overflow-hidden rounded-3xl border border-dashed border-gray-300 bg-white shadow-[0_1px_8px_rgba(41,27,26,0.06)] transition-colors duration-200 hover:border-surface-dark"
       >
         <div className="flex flex-1 items-center justify-center bg-surface-light-dark/40">
-          {previewUrl ? (
+          {resolvedPreviewUrl ? (
             <img
-              src={previewUrl}
+              src={resolvedPreviewUrl}
               alt="Pré-visualização da imagem da receita"
               className="h-full w-full object-cover"
             />
@@ -77,10 +81,14 @@ export function RecipeImageInput({
 
         <div className="flex items-center justify-between gap-4 border-t border-gray-200 px-4 py-3 text-sm text-text-primary">
           <span className="font-semibold">
-            {file ? "Imagem selecionada" : "Nenhuma imagem selecionada"}
+            {file
+              ? "Imagem selecionada"
+              : previewUrl
+                ? "Imagem atual"
+                : "Nenhuma imagem selecionada"}
           </span>
           <span className="rounded-full bg-surface-light-dark px-3 py-1 text-xs font-bold uppercase tracking-wide text-surface-dark transition-colors duration-200 group-hover:bg-surface-dark group-hover:text-white">
-            {file ? "Trocar" : "Selecionar"}
+            {file || previewUrl ? "Trocar" : "Selecionar"}
           </span>
         </div>
       </label>

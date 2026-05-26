@@ -15,6 +15,7 @@ export function UserRoutes() {
         <Route path="/profile/me" element={<Profile />} />
         <Route path="/recipes/me" element={<MyRecipes />} />
         <Route path="/recipes/new" element={<CreateRecipe />} />
+        <Route path="/recipes/edit/:id" element={<CreateRecipe />} />
         <Route path="/recipes/community" element={<CommunityRecipes />} />
         <Route path="/recipes/preview" element={<RecipeSuccess />} />
       </Route>

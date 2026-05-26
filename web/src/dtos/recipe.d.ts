@@ -43,6 +43,10 @@ export type CreateRecipeResponse = {
   recipe: RecipeSummaryData;
 };
 
+export type RecipeResponse = {
+  recipe: RecipeSummaryData;
+};
+
 export type RecipesListResponse = {
   recipes: RecipeSummaryData[];
   pagination: {
