@@ -5,7 +5,7 @@ import { NotFound } from "../pages/NotFound";
 import { MyRecipes } from "../pages/recipes/MyRecipes";
 import { CreateRecipe } from "../pages/recipes/CreateRecipe";
 import { CommunityRecipes } from "../pages/recipes/CommunityRecipes";
-import { RecipePreview } from "../pages/recipes/RecipePreview";
+import { RecipeSuccess } from "../pages/recipes/RecipeSuccess";
 import { Profile } from "../pages/Profile";
 
 export function UserRoutes() {
@@ -16,7 +16,7 @@ export function UserRoutes() {
         <Route path="/recipes/me" element={<MyRecipes />} />
         <Route path="/recipes/new" element={<CreateRecipe />} />
         <Route path="/recipes/community" element={<CommunityRecipes />} />
-        <Route path="/recipes/preview" element={<RecipePreview />} />
+        <Route path="/recipes/preview" element={<RecipeSuccess />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
