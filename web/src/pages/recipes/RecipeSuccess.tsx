@@ -7,12 +7,24 @@ import bgImg from "../../assets/bg-image.jpg";
 import { Button } from "../../components/Button";
 import type { RecipeSummaryData } from "../../dtos/recipe";
 
-type RecipeSuccessLocationState = RecipeSummaryData | null;
+type RecipeSuccessLocationState =
+  | RecipeSummaryData
+  | {
+      recipe: RecipeSummaryData;
+      showEditButton?: boolean;
+    }
+  | null;
 
 export function RecipeSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
-  const recipe = location.state as RecipeSuccessLocationState;
+  const locationState = location.state as RecipeSuccessLocationState;
+  const recipe = locationState && "recipe" in locationState
+    ? locationState.recipe
+    : locationState;
+  const showEditButton = Boolean(
+    locationState && "recipe" in locationState && locationState.showEditButton,
+  );
 
   useEffect(() => {
     if (!recipe) {
@@ -37,15 +49,25 @@ export function RecipeSuccess() {
     >
       <div className="w-200 p-6 bg-surface-light rounded-3xl flex flex-col mt-12 mb-7 text-text-secondary">
         <div className="mb-4 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-text-primary/60">
-            Receita criada com sucesso
-          </p>
+          {showEditButton && (
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-text-primary/60">
+              Receita criada com sucesso
+            </p>
+          )}
           <h1 className="mt-2 leading-[140%] text-[2.5rem] text-text-primary font-normal">
             {recipe.title}
           </h1>
         </div>
 
         <div className="mb-4 flex items-center justify-end">
+          {showEditButton && (
+            <Button
+              className="mr-3 w-auto px-4 text-sm"
+              onClick={() => navigate(`/recipes/edit/${recipe.id}`, { state: recipe })}
+            >
+              Editar receita
+            </Button>
+          )}
           <Button variant="icon" onClick={handleDownloadHtml}>
             <Download />
           </Button>

@@ -7,7 +7,7 @@ type RecipeCardProps = {
 export function RecipeCard({ recipe }: RecipeCardProps) {
   const navigate = useNavigate();
 
-  function handleOpenPreview() {
+  function handleOpenRecipe() {
     navigate("/recipes/preview", { state: recipe });
   }
 
@@ -16,11 +16,11 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
       className="w-full cursor-pointer bg-surface-light rounded-lg overflow-hidden shadow-[0_2px_12px_rgba(41,27,26,0.12)] p-3 transition-transform duration-200 hover:-translate-y-1"
       role="button"
       tabIndex={0}
-      onClick={handleOpenPreview}
+      onClick={handleOpenRecipe}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          handleOpenPreview();
+          handleOpenRecipe();
         }
       }}
     >
