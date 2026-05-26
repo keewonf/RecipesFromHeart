@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { Heart, Home, LogOut, Notebook, User, Users } from "lucide-react";
 import logoSvg from "../assets/logo.svg";
 import { classMerge } from "../utils/classMerge";
@@ -10,6 +10,7 @@ type SidebarProps = {
 
 export function Sidebar({ className }: SidebarProps) {
   const auth = useAuth();
+  const navigate = useNavigate();
 
   return (
     <aside className={classMerge(["bg-surface-light-dark", className])}>
@@ -66,7 +67,10 @@ export function Sidebar({ className }: SidebarProps) {
           </li>
           <li>
             <button
-              onClick={() => auth.remove()}
+              onClick={() => {
+                auth.remove();
+                navigate("/");
+              }}
               className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
             >
               <LogOut />
