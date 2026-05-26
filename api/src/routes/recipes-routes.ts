@@ -6,7 +6,7 @@ const recipesController = new RecipesController();
 
 recipesRoutes.post("/", recipesController.create);
 recipesRoutes.get("/me", recipesController.index);
-recipesRoutes.get("/community", recipesController.community);
+recipesRoutes.get("/", recipesController.community);
 recipesRoutes.patch("/:id", recipesController.update);
 recipesRoutes.delete("/:id", recipesController.delete);
 
