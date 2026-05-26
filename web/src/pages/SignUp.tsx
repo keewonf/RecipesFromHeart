@@ -4,7 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { api } from "../services/api";
+import { AxiosError } from "axios";
 
 const signUpSchema = z
   .object({
@@ -27,7 +29,8 @@ export function SignUp() {
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    setError,
+    formState: { isSubmitting, errors },
   } = useForm<FormData>({
     defaultValues: {
       name: "",
@@ -38,10 +41,29 @@ export function SignUp() {
     resolver: zodResolver(signUpSchema),
   });
 
+  const navigate = useNavigate();
+
   async function onSubmit(data: FormData) {
     const { confirmPassword, ...rest } = data;
 
-    console.log(rest);
+    try {
+      await api.post("/users", rest);
+
+      navigate("/");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setError("email", {
+          type: "server",
+          message: error.response?.data.message,
+        });
+        return;
+      }
+
+      setError("root", {
+        type: "server",
+        message: "Erro inesperado. Tente novamente.",
+      });
+    }
   }
 
   return (
@@ -57,7 +79,7 @@ export function SignUp() {
           control={control}
           name="name"
           render={({ field }) => (
-            <Input required placeholder="Nome" {...field} />
+            <Input required placeholder="Nome" error={errors.name?.message} {...field} />
           )}
         />
 
@@ -65,7 +87,7 @@ export function SignUp() {
           control={control}
           name="email"
           render={({ field }) => (
-            <Input required type="email" placeholder="Email" {...field} />
+            <Input required type="email" placeholder="Email" autoComplete="email" error={errors.email?.message} {...field} />
           )}
         />
 
@@ -73,7 +95,7 @@ export function SignUp() {
           control={control}
           name="password"
           render={({ field }) => (
-            <Input required type="password" placeholder="senha" {...field} />
+            <Input required type="password" placeholder="senha" autoComplete="new-password" error={errors.password?.message} {...field} />
           )}
         />
 
@@ -84,7 +106,9 @@ export function SignUp() {
             <Input
               required
               type="password"
+              autoComplete="new-password"
               placeholder="Confirmar senha"
+              error={errors.confirmPassword?.message}
               {...field}
             />
           )}
