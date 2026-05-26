@@ -17,6 +17,16 @@ class SessionsController {
 
     const user = await prisma.user.findUnique({
       where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        role: true,
+        profileImageUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (!user) {
