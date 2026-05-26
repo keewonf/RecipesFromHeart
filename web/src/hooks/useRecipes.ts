@@ -1,3 +1,8 @@
+import { useEffect, useState } from "react";
+
+import { api } from "../services/api";
+import type { CreateRecipeData } from "../dtos/recipe";
+
 type UseRecipesParams = {
   type: "mine" | "community" | "favorites";
   page?: number;
@@ -7,89 +12,50 @@ type UseRecipesParams = {
 type UseRecipesResult = {
   recipes: any[];
   loading: boolean;
-  error: null;
-  loadMore: () => void;
+  error: string | null;
+  refetch: () => Promise<void>;
 };
 
-export function useRecipes(_params: UseRecipesParams): UseRecipesResult {
-  // Design-only stub: returns placeholders so pages/components can render layout
+export function useRecipes({ type }: UseRecipesParams): UseRecipesResult {
+  const [recipes, setRecipes] = useState<CreateRecipeData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchRecipes() {
+    try {
+      setLoading(true);
+      setError(null);
+
+      let endpoint = "/recipes";
+
+      if (type === "mine") {
+        endpoint = "/recipes/me";
+      }
+
+      if (type === "favorites") {
+        endpoint = "/favorites";
+      }
+
+      const response = await api.get(endpoint);
+
+      setRecipes(response.data.recipes);
+    } catch (error) {
+      setError("Erro ao buscar receitas.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchRecipes()
+  }, [type])
+
   return {
-    recipes: [
-      {
-        id: "demo-1",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-2",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-3",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-4",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-5",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-8",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-6",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-7",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-9",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-      {
-        id: "demo-10",
-        title: "Cupcake de limão",
-        time: "1h10",
-        servings: 12,
-        rating: "4.8",
-      },
-    ],
-    loading: false,
-    error: null,
-    loadMore: () => {},
-  };
+    recipes,
+    loading,
+    error,
+    refetch: fetchRecipes,
+  }
 }
 
 export default useRecipes;
