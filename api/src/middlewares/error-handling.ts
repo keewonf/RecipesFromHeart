@@ -17,8 +17,11 @@ const errorHandling: ErrorRequestHandler = (
       .status(400)
       .json({ message: "Validation error!", issues: z.treeifyError(error) });
   }
-
-  return res.status(500).json({ message: error.message });
+  // Log internal error for diagnostics, but don't expose internals to clients
+  // (avoid leaking stack traces or implementation details)
+  // eslint-disable-next-line no-console
+  console.error(error);
+  return res.status(500).json({ message: "Internal server error" });
 };
 
 export { errorHandling };
