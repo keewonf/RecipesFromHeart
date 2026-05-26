@@ -6,21 +6,23 @@ import { useNavigate } from "react-router";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { RecipeImageInput } from "../../components/recipes/RecipeImageInput";
-import type { CreateRecipeData, IngredientData } from "../../dtos/recipe";
+import { api } from "../../services/api";
+import { AxiosError } from "axios";
+import type { CreateRecipeResponse, UploadAPIResponse } from "../../dtos/recipe";
 
 export const ingredientSchema = z.object({
-  quantity: z.string().trim().max(50, "Quantidade muito longa").optional(),
+  quantity: z.string().trim().min(1, "Informe a quantidade").max(50, "Quantidade muito longa"),
   unit: z.string().trim().max(30, "Unidade muito longa").optional(),
   name: z.string().trim().min(1, "Informe o ingrediente"),
   note: z.string().trim().max(120, "Observação muito longa").optional(),
 });
 
 export const createRecipeSchema = z.object({
-  title: z.string().trim().min(10, "Bote um título descritivo"),
-  resume: z.string().trim().min(1, "Adicione um resumo para sua receita"),
-  preparationTime: z.coerce.number().positive("Selecione um número válido"),
-  portions: z.coerce.number().positive("Selecione um número válido"),
-  image: z.custom<File>((value) => value instanceof File, {
+  title: z.string().trim().min(5, "Bote um título descritivo"),
+  resume: z.string().trim().min(5, "Adicione um resumo para sua receita"),
+  preparationTime: z.coerce.number().int().positive("Selecione um número válido"),
+  portions: z.coerce.number().int().positive("Selecione um número válido"),
+  image: z.instanceof(File, {
     message: "Selecione uma imagem da receita",
   }),
   ingredients: z
@@ -34,8 +36,6 @@ export const createRecipeSchema = z.object({
 
 type FormInput = z.input<typeof createRecipeSchema>;
 type FormOutput = z.output<typeof createRecipeSchema>;
-
-export type { CreateRecipeData, IngredientData };
 
 function normalizeNumberInputValue(value: unknown): string | number {
   if (typeof value === "number" && Number.isFinite(value)) {
@@ -53,6 +53,7 @@ export function CreateRecipe() {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { isSubmitting },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(createRecipeSchema),
@@ -91,8 +92,45 @@ export function CreateRecipe() {
     name: "ingredients",
   });
 
-  function onSubmit(data: FormOutput) {
-    navigate("/recipes/preview", { state: data });
+  async function onSubmit(data: FormOutput) {
+    try {
+      if (!data.image) {
+        return alert("Não existem dados para enviar");
+      }
+
+      const imageUploadForm = new FormData();
+      imageUploadForm.append("file", data.image);
+
+      const response = await api.post<UploadAPIResponse>(
+        "/uploads/recipes",
+        imageUploadForm,
+      );
+
+      const { image, ...recipeData } = data;
+
+      const createRecipeResponse = await api.post<CreateRecipeResponse>("/recipes", {
+        ...recipeData,
+        imageKey: response.data.imageKey,
+        imageUrl: response.data.imageUrl,
+      });
+
+      navigate("/recipes/preview", { state: createRecipeResponse.data.recipe });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message =
+          error.response?.data?.message ?? "Erro de conexão com o servidor";
+        setError("root", {
+          message,
+        });
+        return;
+      }
+
+      setError("root", {
+        message: "Erro inesperado. Tente novamente",
+      });
+
+      return;
+    }
   }
 
   return (

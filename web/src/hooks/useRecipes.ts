@@ -47,15 +47,15 @@ export function useRecipes({ type }: UseRecipesParams): UseRecipesResult {
   }
 
   useEffect(() => {
-    fetchRecipes()
-  }, [type])
+    fetchRecipes();
+  }, [type]);
 
   return {
     recipes,
     loading,
     error,
     refetch: fetchRecipes,
-  }
+  };
 }
 
 export default useRecipes;
