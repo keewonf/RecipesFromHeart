@@ -5,6 +5,9 @@ import { Controller, useForm } from "react-hook-form";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { Link } from "react-router";
+import { AxiosError } from "axios";
+import { api } from "../services/api";
+import { useAuth } from "../hooks/useAuth";
 
 const signInSchema = z.object({
   email: z.email("E-mail inválido"),
@@ -17,7 +20,8 @@ export function SignIn() {
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    setError,
+    formState: { isSubmitting, errors },
   } = useForm<FormData>({
     defaultValues: {
       email: "",
@@ -26,8 +30,28 @@ export function SignIn() {
     resolver: zodResolver(signInSchema),
   });
 
+  const auth = useAuth();
+
   async function onSubmit(data: FormData) {
-    console.log(data);
+    try {
+      const response = await api.post("/sessions", data);
+      auth.save(response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message =
+          error.response?.data?.message ?? "Erro de conexão com o servidor";
+        setError("root", {
+          message,
+        });
+        return;
+      }
+
+      setError("root", {
+        message: "Erro inesperado. Tente novamente",
+      });
+
+      return;
+    }
   }
 
   return (
@@ -37,37 +61,54 @@ export function SignIn() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex flex-col gap-4 "
       >
-      <Controller
-        control={control}
-        name="email"
-        render={({ field }) => (
-          <Input required type="email" placeholder="email" {...field} />
-        )}
-      />
+        <Controller
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <Input
+              required
+              type="email"
+              placeholder="email"
+              error={errors.email?.message}
+              {...field}
+            />
+          )}
+        />
 
-      <Controller
-        control={control}
-        name="password"
-        render={({ field }) => (
-          <Input required type="password" placeholder="senha" {...field} />
-        )}
-      />
-      <Link
-        className="text-surface-dark ml-auto font-bold hover:text-text-primary"
-        to="/help"
-      >
-        Esqueci a senha
-      </Link>
-      <Button isLoading={isSubmitting} type="submit">
-        Entrar
-      </Button>
+        <Controller
+          control={control}
+          name="password"
+          render={({ field }) => (
+            <Input
+              required
+              type="password"
+              placeholder="senha"
+              error={errors.password?.message}
+              {...field}
+            />
+          )}
+        />
 
-      <Link
-        className="text-surface-dark font-bold m-auto hover:text-text-primary"
-        to="/signup"
-      >
-        Ainda não tem conta? Crie uma!
-      </Link>
+        <p className="text-sm text-red-600 text-center my-4 font-medium">
+          {errors.root?.message}
+        </p>
+
+        <Link
+          className="text-surface-dark ml-auto font-bold hover:text-text-primary"
+          to="/help"
+        >
+          Esqueci a senha
+        </Link>
+        <Button isLoading={isSubmitting} type="submit">
+          Entrar
+        </Button>
+
+        <Link
+          className="text-surface-dark font-bold m-auto hover:text-text-primary"
+          to="/signup"
+        >
+          Ainda não tem conta? Crie uma!
+        </Link>
       </form>
     </>
   );
