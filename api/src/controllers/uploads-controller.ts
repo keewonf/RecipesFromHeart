@@ -18,6 +18,7 @@ class UploadsController {
       throw new AppError("Um arquivo é obrigatório");
     }
 
+    let parsedFile: any = null;
     try {
       const fileSchema = z
         .object({
@@ -28,30 +29,29 @@ class UploadsController {
         })
         .loose();
 
-      const file = fileSchema.parse(req.file);
+      parsedFile = fileSchema.parse(req.file);
 
       const cloudinaryFile = await cloudinaryStorage.saveFile(
-        file.path,
-        file.filename,
+        parsedFile.path,
+        parsedFile.filename,
         folder,
       );
-
-      await diskStorage.deleteTmpFile(file.filename);
 
       res.json({
         imageUrl: cloudinaryFile.url,
         imageKey: cloudinaryFile.publicId,
-        originalFilename: file.filename,
+        originalFilename: parsedFile.filename,
       });
     } catch (error) {
-      if (req.file) {
-        await diskStorage.deleteTmpFile(req.file.filename);
-      }
-
       if (error instanceof ZodError) {
         throw new AppError(error.issues[0].message);
       }
       throw error;
+    } finally {
+      // Ensure temp file is removed in all cases
+      if (req.file) {
+        await diskStorage.deleteTmpFile(req.file.filename);
+      }
     }
   }
 

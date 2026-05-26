@@ -417,7 +417,7 @@ class RecipesController {
     });
 
     if (!recipe) {
-      throw new AppError("Receita não encontrada", 401);
+      throw new AppError("Receita não encontrada", 404);
     }
 
     if (!recipe.isPublic && recipe.userId !== req.user.id) {

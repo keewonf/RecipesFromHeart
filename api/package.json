@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsup",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "jest --passWithNoTests"
   },
   "author": "Lucas Moura",
   "license": "ISC",
@@ -21,7 +22,9 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "pg": "^8.21.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^7.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
