@@ -85,8 +85,8 @@ export function RecipeSuccess() {
     session?.user.id && recipe?.userId && session.user.id === recipe.userId,
   );
 
-  const resumeText = recipe?.resume.trim() ?? "";
-  const preparationText = recipe?.preparationMethod.trim() ?? "";
+  const resumeText = recipe?.resume?.trim() ?? "";
+  const preparationText = recipe?.preparationMethod?.trim() ?? "";
 
   function handleDownloadHtml() {
     console.log("cliquei aqui");
