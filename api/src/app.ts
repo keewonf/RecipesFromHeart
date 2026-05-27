@@ -11,23 +11,26 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
+    // Keep CORS restricted to allowed frontend origins
     origin: env.CORS_ORIGIN,
   }),
 );
 app.use(express.json());
 
-// Rate limiters for sensitive endpoints
+// Limits requests to authentication endpoints (login/session) to prevent brute force attempts
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 requests per windowMs
+  windowMs: 15 * 60 * 1000, // Time window (15 minutes)
+  max: 10, // Maximum number of requests allowed within this window (for each ip)
 });
 
+// Same rate limiting strategy as auth, but applied to uploads
 const uploadsLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
 });
 
-// Apply rate limiters before routes mount
+// Apply rate limiting middleware before route handlers
+// Ensures all /sessions and /uploads routes are protected
 app.use("/sessions", authLimiter);
 app.use("/uploads", uploadsLimiter);
 
