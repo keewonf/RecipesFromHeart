@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
@@ -29,13 +29,14 @@ export function SignIn() {
     },
     resolver: zodResolver(signInSchema),
   });
-
+  const navigate = useNavigate();
   const auth = useAuth();
 
   async function onSubmit(data: FormData) {
     try {
       const response = await api.post("/sessions", data);
       auth.save(response.data);
+      navigate("/");
     } catch (error) {
       if (error instanceof AxiosError) {
         const message =
