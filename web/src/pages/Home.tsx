@@ -12,15 +12,21 @@ export function Home() {
         <section className="rounded-4xl bg-[linear-gradient(180deg,#fff8f4_0%,#fffdfb_100%)] p-5 shadow-[0_10px_35px_rgba(41,27,26,0.10)] md:p-8">
           <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
             <div className="rounded-3xl border border-surface-dark/10 bg-white/80 p-5 md:p-8">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-surface-dark md:text-sm">
-                🍳 Recipes From Heart
-              </p>
+              <div className="mb-3 flex items-center gap-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-surface-dark md:text-sm">
+                  🍳 Recipes From Heart
+                </p>
+
+                <span className="rounded-full bg-surface-dark/10 px-2 py-1 text-[10px] font-semibold text-surface-dark">
+                  v1 • em desenvolvimento
+                </span>
+              </div>
 
               <h1 className="max-w-2xl text-3xl font-bold leading-tight text-text-primary md:text-5xl">
-                Recipes From Heart é um projeto que desenvolvi como forma de
-                estudo e diversão, onde podemos compartilhar receitas que amamos
-                fazer — não importa o que seja! (o ovo frito que compartilhei
-                está aí de exemplo hehe 🍳)
+                Este é um projeto que desenvolvi como forma de estudo e
+                diversão, onde podemos compartilhar receitas que amamos fazer —
+                não importa o que seja! (o ovo frito que compartilhei está aí de
+                exemplo hehe 🍳)
               </h1>
 
               <p className="mt-5 text-base leading-8 text-text-secondary md:text-lg">
