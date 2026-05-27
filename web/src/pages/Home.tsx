@@ -1,7 +1,11 @@
 import { Link } from "react-router";
 import { MessageCircle, Code2, ArrowUpRight } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
 
 export function Home() {
+  const { session } = useAuth();
+  const isLoggedIn = Boolean(session);
+
   return (
     <div className="px-4 py-6 md:px-6 md:py-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
@@ -43,12 +47,18 @@ export function Home() {
 
                 <p className="mt-4 text-base leading-8 text-text-secondary md:text-lg">
                   É simples! Você pode criar uma conta clicando em
-                  <Link
-                    to="/signup"
-                    className="mx-1 cursor-pointer font-bold text-surface-dark underline decoration-surface-dark/40 underline-offset-4 transition-colors duration-200 hover:text-text-primary hover:decoration-surface-dark"
-                  >
-                    “Registrar-se”
-                  </Link>
+                  {isLoggedIn ? (
+                    <strong className="mx-1 font-bold text-surface-dark">
+                      “Registrar-se”
+                    </strong>
+                  ) : (
+                    <Link
+                      to="/signup"
+                      className="mx-1 cursor-pointer font-bold text-surface-dark underline decoration-surface-dark/40 underline-offset-4 transition-colors duration-200 hover:text-text-primary hover:decoration-surface-dark"
+                    >
+                      “Registrar-se”
+                    </Link>
+                  )}
                   e depois fazer login.
                 </p>
 
