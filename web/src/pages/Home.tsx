@@ -1,12 +1,7 @@
 import { Link } from "react-router";
 import { MessageCircle, Code2, ArrowUpRight } from "lucide-react";
 
-import { RecipeList } from "../components/recipes/RecipeList";
-import { useRecipes } from "../hooks/useRecipes";
-
 export function Home() {
-  const { recipes, loading } = useRecipes({ type: "community", perPage: 6 });
-
   return (
     <div className="px-4 py-6 md:px-6 md:py-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
@@ -48,7 +43,13 @@ export function Home() {
 
                 <p className="mt-4 text-base leading-8 text-text-secondary md:text-lg">
                   É simples! Você pode criar uma conta clicando em
-                  “Registrar-se” e depois fazer login.
+                  <Link
+                    to="/signup"
+                    className="mx-1 cursor-pointer font-bold text-surface-dark underline decoration-surface-dark/40 underline-offset-4 transition-colors duration-200 hover:text-text-primary hover:decoration-surface-dark"
+                  >
+                    “Registrar-se”
+                  </Link>
+                  e depois fazer login.
                 </p>
 
                 <p className="mt-4 text-base leading-8 text-text-secondary md:text-lg">
@@ -60,8 +61,14 @@ export function Home() {
                 <p className="mt-4 text-base leading-8 text-text-secondary md:text-lg">
                   Ou talvez você só queira ver as receitas da comunidade antes
                   de decidir criar sua própria conta. Nesse caso, você pode
-                  simplesmente clicar em “Receitas da Comunidade” e ignorar o
-                  login!
+                  simplesmente clicar em
+                  <Link
+                    to="/recipes/community"
+                    className="mx-1 cursor-pointer font-bold text-surface-dark underline decoration-surface-dark/40 underline-offset-4 transition-colors duration-200 hover:text-text-primary hover:decoration-surface-dark"
+                  >
+                    “Receitas da Comunidade”
+                  </Link>
+                  e ignorar o login!
                 </p>
 
                 <p className="mt-4 text-base leading-8 text-text-secondary md:text-lg">
@@ -69,19 +76,33 @@ export function Home() {
                   receita conosco ❤️
                 </p>
 
-                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                  <Link
-                    to="/signup"
-                    className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-surface-dark bg-surface-dark px-4 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-text-primary sm:w-auto md:rounded-3xl md:text-xl"
-                  >
-                    Registrar-se
-                  </Link>
-                  <Link
-                    to="/recipes/community"
-                    className="inline-flex h-12 w-full items-center justify-center rounded-2xl border border-surface-dark px-4 py-3 text-base font-semibold text-surface-dark transition-colors duration-200 hover:bg-white/70 hover:text-text-primary sm:w-auto md:rounded-3xl md:text-xl"
-                  >
-                    Receitas da Comunidade
-                  </Link>
+                <div className="mt-6 rounded-2xl border border-surface-dark/10 bg-surface-light/70 p-4 md:p-5">
+                  <h3 className="text-xl font-bold text-text-primary md:text-2xl">
+                    🍲 Quer criar sua própria receita?
+                  </h3>
+
+                  <div className="mt-3 space-y-4 text-base leading-8 text-text-secondary md:text-lg">
+                    <p>
+                      Vá em “Minhas receitas”. Lá você encontrará um botão de
+                      “Nova receita”.
+                    </p>
+
+                    <p>
+                      Ao clicar nele, será aberto um formulário para preencher
+                      os dados e adicionar uma fotinho da sua receita 📸
+                    </p>
+
+                    <p>
+                      Alguns campos podem ficar vazios, então se você acredita
+                      que sua receita não se encaixa em algum deles, não se
+                      obrigue a preencher tudo!
+                    </p>
+
+                    <p>
+                      Depois é só salvar sua receita ✨ Você poderá visualizá-la
+                      logo após salvar e editar algo caso não tenha gostado.
+                    </p>
+                  </div>
                 </div>
               </article>
 
@@ -158,35 +179,6 @@ export function Home() {
 
             <article className="rounded-3xl border border-surface-dark/10 bg-white/85 p-5 md:p-7">
               <h2 className="text-2xl font-bold text-text-primary md:text-3xl">
-                🍲 Quer criar sua própria receita?
-              </h2>
-
-              <div className="mt-4 space-y-4 text-base leading-8 text-text-secondary md:text-lg">
-                <p>
-                  Vá em “Minhas receitas”. Lá você encontrará um botão de “Nova
-                  receita”.
-                </p>
-
-                <p>
-                  Ao clicar nele, será aberto um formulário para preencher os
-                  dados e adicionar uma fotinho da sua receita 📸
-                </p>
-
-                <p>
-                  Alguns campos podem ficar vazios, então se você acredita que
-                  sua receita não se encaixa em algum deles, não se obrigue a
-                  preencher tudo!
-                </p>
-
-                <p>
-                  Depois é só salvar sua receita ✨ Você poderá visualizá-la
-                  logo após salvar e editar algo caso não tenha gostado.
-                </p>
-              </div>
-            </article>
-
-            <article className="rounded-3xl border border-surface-dark/10 bg-white/85 p-5 md:p-7">
-              <h2 className="text-2xl font-bold text-text-primary md:text-3xl">
                 👨‍💻 Sobre mim
               </h2>
 
@@ -229,27 +221,6 @@ export function Home() {
               </div>
             </article>
           </div>
-        </section>
-
-        <section className="rounded-[2rem] bg-surface-light p-5 shadow-[0_10px_35px_rgba(41,27,26,0.10)] md:p-8">
-          <div className="mb-4 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-surface-dark md:text-sm">
-                Comunidade
-              </p>
-              <h2 className="mt-1 text-2xl font-bold text-text-primary md:text-3xl">
-                Receitas em destaque
-              </h2>
-            </div>
-            <Link
-              className="text-sm font-bold text-surface-dark hover:text-text-primary md:text-base"
-              to="/recipes/community"
-            >
-              Ver todas
-            </Link>
-          </div>
-
-          <RecipeList recipes={recipes} loading={loading} />
         </section>
       </div>
     </div>
