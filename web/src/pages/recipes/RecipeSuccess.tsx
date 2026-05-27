@@ -186,7 +186,7 @@ export function RecipeSuccess() {
           <img
             src={heartImg}
             alt="Heart Icon"
-            className="mx-1 h-[12px] w-[14px] shrink-0"
+            className="mx-1 h-3 w-3.5 shrink-0"
           />
           <span>
             por <span className="font-normal">{ownerName}</span>
