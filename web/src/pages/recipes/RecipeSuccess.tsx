@@ -85,6 +85,9 @@ export function RecipeSuccess() {
     session?.user.id && recipe?.userId && session.user.id === recipe.userId,
   );
 
+  const resumeText = recipe?.resume.trim() ?? "";
+  const preparationText = recipe?.preparationMethod.trim() ?? "";
+
   function handleDownloadHtml() {
     console.log("cliquei aqui");
   }
@@ -138,8 +141,8 @@ export function RecipeSuccess() {
                   </Button>
                 </div>
               )}
-              <p className="text-sm leading-7 text-text-secondary md:text-base">
-                {recipe.resume}
+              <p className="whitespace-pre-line text-sm leading-7 text-text-secondary md:text-base">
+                {resumeText}
                 <br />
                 <br />
                 Tempo: {recipe.preparationTime} minuto(s)
@@ -171,8 +174,8 @@ export function RecipeSuccess() {
                 Modo de preparo
               </h2>
 
-              <p className="text-sm leading-7 md:text-base">
-                {recipe.preparationMethod}
+              <p className="whitespace-pre-line text-sm leading-7 md:text-base">
+                {preparationText}
               </p>
             </section>
           </main>
