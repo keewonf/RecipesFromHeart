@@ -1,11 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Download } from "lucide-react";
 
 import recipeImg from "../../assets/main-image.png";
 import bgImg from "../../assets/bg-image.jpg";
 import { Button } from "../../components/Button";
-import type { RecipeSummaryData } from "../../dtos/recipe";
+import { api } from "../../services/api";
+import type { RecipeResponse, RecipeSummaryData } from "../../dtos/recipe";
 
 type RecipeSuccessLocationState =
   | RecipeSummaryData
@@ -19,17 +20,56 @@ export function RecipeSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
   const locationState = location.state as RecipeSuccessLocationState;
-  const recipe = locationState && "recipe" in locationState
-    ? locationState.recipe
-    : locationState;
+  const initialRecipe =
+    locationState && "recipe" in locationState
+      ? locationState.recipe
+      : locationState;
   const showEditButton = Boolean(
     locationState && "recipe" in locationState && locationState.showEditButton,
   );
+  const [recipe, setRecipe] = useState<RecipeSummaryData | null>(initialRecipe);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!recipe) {
+    const currentRecipe = recipe;
+
+    if (!currentRecipe) {
       navigate("/recipes/me", { replace: true });
+      return;
     }
+
+    if (currentRecipe.ingredients?.length) {
+      return;
+    }
+
+    const recipeId = currentRecipe.id;
+    const controller = new AbortController();
+
+    async function loadRecipe() {
+      try {
+        setIsLoading(true);
+        const response = await api.get<RecipeResponse>(`/recipes/${recipeId}`, {
+          signal: controller.signal,
+        });
+
+        setRecipe(response.data.recipe);
+      } catch (error) {
+        const err: any = error;
+        if (err?.code === "ERR_CANCELED" || err?.name === "CanceledError") {
+          return;
+        }
+
+        navigate("/recipes/me", { replace: true });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void loadRecipe();
+
+    return () => {
+      controller.abort();
+    };
   }, [navigate, recipe]);
 
   const previewImageUrl = recipe?.imageUrl ?? recipeImg;
@@ -38,7 +78,7 @@ export function RecipeSuccess() {
     console.log("cliquei aqui");
   }
 
-  if (!recipe) {
+  if (!recipe || isLoading) {
     return null;
   }
 
@@ -63,7 +103,9 @@ export function RecipeSuccess() {
           {showEditButton && (
             <Button
               className="mr-3 w-auto px-4 text-sm"
-              onClick={() => navigate(`/recipes/edit/${recipe.id}`, { state: recipe })}
+              onClick={() =>
+                navigate(`/recipes/edit/${recipe.id}`, { state: recipe })
+              }
             >
               Editar receita
             </Button>
