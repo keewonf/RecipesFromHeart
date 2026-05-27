@@ -1,5 +1,6 @@
 import multer from "multer";
 import path from "node:path";
+import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import { Request } from "express";
 
@@ -11,7 +12,14 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
 const MULTER = {
   storage: multer.diskStorage({
-    destination: TMP_FOLDER,
+    destination: async (_req, _file, callback) => {
+      try {
+        await fs.mkdir(TMP_FOLDER, { recursive: true });
+        callback(null, TMP_FOLDER);
+      } catch (error) {
+        callback(error as Error, TMP_FOLDER);
+      }
+    },
     filename(req, file, callback) {
       const fileHash = crypto.randomBytes(10).toString("hex");
       const fileName = `${fileHash}-${file.originalname}`;

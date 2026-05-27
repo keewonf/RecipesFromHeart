@@ -45,7 +45,10 @@ Response:
   "user": {
     "id": "...",
     "name": "...",
-    "email": "..."
+    "email": "...",
+    "role": "USER",
+    "profileImageUrl": null,
+    "profileImageKey": null
   }
 }
 ```
@@ -102,6 +105,8 @@ Response:
 ### `GET /recipes`
 
 Lists public recipes from the community.
+
+This route is public and does not require authentication.
 
 Query params:
 
