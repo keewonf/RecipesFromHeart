@@ -5,6 +5,7 @@ import { Download } from "lucide-react";
 import recipeImg from "../../assets/main-image.png";
 import bgImg from "../../assets/bg-image.jpg";
 import { Button } from "../../components/Button";
+import { Loading } from "../../components/Loading";
 import { api } from "../../services/api";
 import type { RecipeResponse, RecipeSummaryData } from "../../dtos/recipe";
 
@@ -38,7 +39,7 @@ export function RecipeSuccess() {
       return;
     }
 
-    if (currentRecipe.ingredients?.length) {
+    if (currentRecipe.ingredients !== undefined) {
       return;
     }
 
@@ -73,13 +74,14 @@ export function RecipeSuccess() {
   }, [navigate, recipe]);
 
   const previewImageUrl = recipe?.imageUrl ?? recipeImg;
+  const ingredients = recipe?.ingredients ?? [];
 
   function handleDownloadHtml() {
     console.log("cliquei aqui");
   }
 
-  if (!recipe || isLoading) {
-    return null;
+  if (!recipe || isLoading || recipe.ingredients === undefined) {
+    return <Loading />;
   }
 
   return (
@@ -138,7 +140,7 @@ export function RecipeSuccess() {
               Ingredientes
             </h2>
             <ul className="list-inside list-disc pl-[0.6em] text-sm leading-7 md:text-base">
-              {recipe.ingredients.map((ingredient) => (
+              {ingredients.map((ingredient) => (
                 <li
                   key={`${ingredient.name}-${ingredient.quantity}-${ingredient.unit}`}
                 >
