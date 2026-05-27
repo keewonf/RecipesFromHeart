@@ -8,7 +8,12 @@ const TMP_FOLDER = path.resolve(__dirname, "..", "..", "tmp");
 
 const MAX_SIZE = 5;
 const MAX_FILE_SIZE = 1024 * 1024 * MAX_SIZE; // 5MB
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 const MULTER = {
   storage: multer.diskStorage({
