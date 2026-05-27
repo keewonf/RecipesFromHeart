@@ -48,6 +48,13 @@ export const recipeFormFieldsSchema = z.object({
     .min(10, "Defina um método de preparo detalhado!"),
 });
 
+const emptyIngredient = {
+  quantity: "",
+  unit: "",
+  name: "",
+  note: "",
+};
+
 type FormInput = z.input<typeof recipeFormFieldsSchema>;
 type FormOutput = z.output<typeof recipeFormFieldsSchema>;
 
@@ -441,9 +448,7 @@ export function CreateRecipe() {
 
               <button
                 type="button"
-                onClick={() =>
-                  append({ quantity: "", unit: "", name: "", note: "" })
-                }
+                onClick={() => append(emptyIngredient)}
                 className="cursor-pointer rounded-2xl border border-surface-dark bg-surface-light-dark px-4 py-3 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-surface-dark hover:text-white md:rounded-3xl"
               >
                 Adicionar ingrediente
@@ -524,6 +529,13 @@ export function CreateRecipe() {
                   </div>
                 </article>
               ))}
+              <button
+                type="button"
+                onClick={() => append(emptyIngredient)}
+                className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 border-dashed border-stone-300 bg-stone-50 py-4 text-sm font-bold text-stone-500 transition-colors duration-200 hover:border-surface-dark hover:bg-surface-light-dark hover:text-surface-dark md:rounded-3xl"
+              >
+                + Adicionar novo ingrediente
+              </button>
             </div>
           </section>
 
