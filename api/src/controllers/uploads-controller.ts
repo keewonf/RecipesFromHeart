@@ -54,7 +54,10 @@ class UploadsController {
           await diskStorage.deleteTmpFile(req.file.filename);
         } catch (cleanupError) {
           // eslint-disable-next-line no-console
-          console.error("Failed to delete temporary upload file:", cleanupError);
+          console.error(
+            "Failed to delete temporary upload file:",
+            cleanupError,
+          );
         }
       }
     }
