@@ -132,7 +132,7 @@ export function RecipeSuccess() {
               {recipe.resume}
               <br />
               <br />
-              Tempo: {recipe.preparationTime}
+              Tempo: {recipe.preparationTime} minuto(s)
               <br />
               Rendimento: {recipe.portions}
             </p>
