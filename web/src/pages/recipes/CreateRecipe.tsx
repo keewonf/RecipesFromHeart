@@ -398,73 +398,45 @@ export function CreateRecipe() {
                     Visibilidade
                   </legend>
 
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <button
-                      type="button"
-                      aria-pressed={isPublic}
-                      onClick={() => field.onChange(true)}
+                  <button
+                    type="button"
+                    aria-pressed={isPublic}
+                    onClick={() => field.onChange(!isPublic)}
+                    className={classMerge(
+                      "flex w-full items-center justify-between gap-4 rounded-3xl border px-4 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light",
+                      isPublic
+                        ? "border-surface-dark bg-surface-light-dark text-text-primary shadow-sm"
+                        : "border-stone-300 bg-stone-50 text-text-secondary hover:border-surface-dark hover:bg-stone-100",
+                    )}
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold md:text-base">
+                        {isPublic ? "Receita pública" : "Receita privada"}
+                      </p>
+                      <p className="mt-1 text-xs leading-5 opacity-80 md:text-sm">
+                        {isPublic
+                          ? "Aparece para outras pessoas na comunidade."
+                          : "Só você poderá ver e editar essa receita."}
+                      </p>
+                    </div>
+
+                    <span
                       className={classMerge(
-                        "flex items-start justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light",
+                        "relative inline-flex h-8 w-16 shrink-0 rounded-full border p-1 transition-colors duration-200",
                         isPublic
-                          ? "border-emerald-500 bg-emerald-50 text-emerald-950 shadow-sm"
-                          : "border-stone-200 bg-stone-50 text-text-secondary hover:border-emerald-300 hover:bg-emerald-50/70",
+                          ? "border-surface-dark bg-surface-dark"
+                          : "border-stone-400 bg-stone-300",
                       )}
+                      aria-hidden="true"
                     >
-                      <div>
-                        <p className="text-sm font-bold md:text-base">
-                          Receita pública
-                        </p>
-                        <p className="mt-1 text-xs leading-5 opacity-80 md:text-sm">
-                          Aparece para outras pessoas na comunidade.
-                        </p>
-                      </div>
-
                       <span
                         className={classMerge(
-                          "mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold transition-colors",
-                          isPublic
-                            ? "border-emerald-600 bg-emerald-600 text-white"
-                            : "border-stone-300 bg-white text-stone-500",
+                          "h-6 w-6 rounded-full bg-white shadow-sm transition-transform duration-200",
+                          isPublic ? "translate-x-8" : "translate-x-0",
                         )}
-                        aria-hidden="true"
-                      >
-                        ✓
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      aria-pressed={!isPublic}
-                      onClick={() => field.onChange(false)}
-                      className={classMerge(
-                        "flex items-start justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light",
-                        !isPublic
-                          ? "border-amber-500 bg-amber-50 text-amber-950 shadow-sm"
-                          : "border-stone-200 bg-stone-50 text-text-secondary hover:border-amber-300 hover:bg-amber-50/70",
-                      )}
-                    >
-                      <div>
-                        <p className="text-sm font-bold md:text-base">
-                          Receita privada
-                        </p>
-                        <p className="mt-1 text-xs leading-5 opacity-80 md:text-sm">
-                          Só você poderá ver e editar essa receita.
-                        </p>
-                      </div>
-
-                      <span
-                        className={classMerge(
-                          "mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold transition-colors",
-                          !isPublic
-                            ? "border-amber-600 bg-amber-600 text-white"
-                            : "border-stone-300 bg-white text-stone-500",
-                        )}
-                        aria-hidden="true"
-                      >
-                        ✓
-                      </span>
-                    </button>
-                  </div>
+                      />
+                    </span>
+                  </button>
 
                   <p className="mt-3 text-sm text-text-secondary">
                     {isPublic
