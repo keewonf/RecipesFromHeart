@@ -60,11 +60,12 @@ const bodySchema = z.object({
 
   isPublic: z.coerce.boolean().default(true),
 
-  imageUrl: z.url({ message: "URL de imagem inválida" }).optional(),
+  imageUrl: z.url({ message: "URL de imagem inválida" }).nullable().optional(),
   imageKey: z
     .string()
     .trim()
     .max(255, "Chave de imagem muito longa")
+    .nullable()
     .optional(),
 
   ingredients: z
@@ -108,11 +109,12 @@ const updateBodySchema = z.object({
 
   isPublic: z.coerce.boolean().optional(),
 
-  imageUrl: z.url({ message: "URL de imagem inválida" }).optional(),
+  imageUrl: z.url({ message: "URL de imagem inválida" }).nullable().optional(),
   imageKey: z
     .string()
     .trim()
     .max(255, "Chave de imagem muito longa")
+    .nullable()
     .optional(),
 
   ingredients: z

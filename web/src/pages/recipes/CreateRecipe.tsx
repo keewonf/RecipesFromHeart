@@ -37,6 +37,7 @@ export const recipeFormFieldsSchema = z.object({
     .positive("Selecione um número válido"),
   portions: z.coerce.number().int().positive("Selecione um número válido"),
   image: z.instanceof(File).nullable(),
+  isPublic: z.boolean(),
   ingredients: z
     .array(ingredientSchema)
     .min(1, "Adicione pelo menos um ingrediente"),
@@ -68,6 +69,7 @@ function mapRecipeToFormValues(recipe: RecipeSummaryData): FormInput {
     preparationTime: recipe.preparationTime,
     portions: recipe.portions,
     image: null,
+    isPublic: recipe.isPublic,
     preparationMethod: recipe.preparationMethod,
     ingredients: recipe.ingredients.map((ingredient) => ({
       quantity: ingredient.quantity,
@@ -118,6 +120,7 @@ export function CreateRecipe() {
       preparationTime: "",
       portions: "",
       image: null,
+      isPublic: true,
       preparationMethod: "",
       ingredients: [
         {
@@ -273,14 +276,14 @@ export function CreateRecipe() {
   }
 
   return (
-    <div className="p-4">
-      <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 rounded-3xl bg-surface-light p-6 shadow-[0_2px_12px_rgba(41,27,26,0.12)]">
-        <div className="flex items-start justify-between gap-4">
+    <div className="p-4 md:p-6">
+      <main className="mx-auto flex w-full max-w-4xl flex-col gap-4 rounded-2xl bg-surface-light p-4 shadow-[0_2px_12px_rgba(41,27,26,0.12)] md:gap-6 md:rounded-3xl md:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-text-primary">
+            <h1 className="text-2xl font-bold text-text-primary md:text-3xl">
               {isEditing ? "Editar receita" : "Nova receita"}
             </h1>
-            <p className="mt-2 text-xl text-text-primary">
+            <p className="mt-2 text-base text-text-primary md:text-xl">
               {isEditing
                 ? "Revise os dados da sua receita e salve as alterações"
                 : "Insira os dados da sua receita"}
@@ -290,14 +293,14 @@ export function CreateRecipe() {
           <button
             type="button"
             onClick={handleCancel}
-            className="cursor-pointer text-xl font-bold text-text-primary/80 transition-colors duration-150 hover:text-text-primary"
+            className="cursor-pointer self-start text-base font-bold text-text-primary/80 transition-colors duration-150 hover:text-text-primary sm:self-auto md:text-xl"
           >
             Voltar
           </button>
         </div>
 
         <form
-          className="flex flex-col gap-5 text-xl font-bold text-text-primary"
+          className="flex flex-col gap-4 text-base font-bold text-text-primary md:gap-5 md:text-xl"
           onSubmit={handleSubmit(onSubmit)}
         >
           <Controller
@@ -382,10 +385,29 @@ export function CreateRecipe() {
             )}
           />
 
+          <Controller
+            control={control}
+            name="isPublic"
+            render={({ field }) => (
+              <label className="flex items-center justify-between gap-4 rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm font-semibold text-text-primary shadow-[0_1px_8px_rgba(41,27,26,0.06)] md:rounded-3xl md:text-base">
+                <span>Receita pública</span>
+                <input
+                  type="checkbox"
+                  checked={field.value}
+                  onChange={(event) => field.onChange(event.target.checked)}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  ref={field.ref}
+                  className="h-5 w-5 cursor-pointer accent-surface-dark"
+                />
+              </label>
+            )}
+          />
+
           <section className="flex flex-col gap-4">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <div>
-                <h2 className="text-xl font-bold text-text-primary">
+                <h2 className="text-lg font-bold text-text-primary md:text-xl">
                   Ingredientes
                 </h2>
                 <p className="text-sm text-text-primary">
@@ -398,7 +420,7 @@ export function CreateRecipe() {
                 onClick={() =>
                   append({ quantity: "", unit: "", name: "", note: "" })
                 }
-                className="cursor-pointer rounded-3xl border border-surface-dark bg-surface-light-dark px-4 py-2 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-surface-dark hover:text-white"
+                className="cursor-pointer rounded-2xl border border-surface-dark bg-surface-light-dark px-4 py-3 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-surface-dark hover:text-white md:rounded-3xl"
               >
                 Adicionar ingrediente
               </button>
@@ -408,7 +430,7 @@ export function CreateRecipe() {
               {fields.map((field, index) => (
                 <article
                   key={field.id}
-                  className="rounded-3xl border border-stone-300 bg-white p-4 shadow-[0_1px_8px_rgba(41,27,26,0.06)]"
+                  className="rounded-2xl border border-stone-300 bg-white p-4 shadow-[0_1px_8px_rgba(41,27,26,0.06)] md:rounded-3xl"
                 >
                   <div className="mb-4 flex items-center justify-between gap-3">
                     <h3 className="font-semibold text-text-primary">
@@ -486,13 +508,13 @@ export function CreateRecipe() {
             name="preparationMethod"
             render={({ field }) => (
               <fieldset className="flex flex-1 flex-col text-surface-dark">
-                <legend className="mb-2 uppercase text-xxs text-text-primary">
+                <legend className="mb-2 uppercase text-xxs text-text-primary md:text-xs">
                   Método de preparo
                 </legend>
                 <textarea
                   {...field}
                   placeholder="Explique o método de preparo"
-                  className="min-h-40 rounded-3xl border border-gray-300 bg-white px-4 py-3.5 text-sm font-bold text-gray-600 outline-none placeholder:uppercase placeholder:text-gray-600/90 focus:border-2 focus:border-surface-dark"
+                  className="min-h-40 rounded-2xl border border-gray-300 bg-white px-4 py-3.5 text-sm font-bold text-gray-600 outline-none transition-colors placeholder:uppercase placeholder:text-gray-600/90 focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10 md:rounded-3xl"
                 />
               </fieldset>
             )}
@@ -502,7 +524,7 @@ export function CreateRecipe() {
             {errors.root?.message}
           </p>
 
-          <div className="flex justify-end">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <Button type="submit" isLoading={isSubmitting}>
               {isEditing ? "Salvar alterações" : "Salvar receita"}
             </Button>
