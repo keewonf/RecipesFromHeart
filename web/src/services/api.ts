@@ -28,7 +28,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
-    if (status === 401) {
+    const requestUrl = String(error?.config?.url ?? "");
+
+    if (status === 401 && !requestUrl.includes("/sessions")) {
       try {
         localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
         localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
