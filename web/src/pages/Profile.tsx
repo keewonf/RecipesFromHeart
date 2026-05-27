@@ -14,6 +14,7 @@ export function Profile() {
     auth.session?.user ?? null,
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formName, setFormName] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -27,6 +28,7 @@ export function Profile() {
     async function loadProfile() {
       setIsLoading(true);
       try {
+        setErrorMessage(null);
         const response = await api.get<{ user: UserAPIResponse["user"] }>(
           "/users/me",
           { signal: controller.signal },
@@ -43,6 +45,8 @@ export function Profile() {
         // Fallback to auth session user if available
         if (auth.session?.user) {
           setUser(auth.session.user);
+        } else {
+          setErrorMessage("Não foi possível carregar seu perfil agora.");
         }
       } finally {
         setIsLoading(false);
@@ -103,12 +107,19 @@ export function Profile() {
             </div>
           </div>
 
+          {errorMessage && (
+            <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 md:text-base">
+              {errorMessage}
+            </p>
+          )}
+
           {isEditing && (
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
                 try {
                   setIsLoading(true);
+                  setErrorMessage(null);
 
                   let profileImageUrl = user?.profileImageUrl ?? null;
                   let profileImageKey: string | null = null;
@@ -137,7 +148,11 @@ export function Profile() {
                   setUser(res.data.user);
                   setIsEditing(false);
                 } catch (err) {
-                  // TODO: show user-facing error
+                  const error = err as AxiosError<{ message?: string }>;
+                  setErrorMessage(
+                    error.response?.data?.message ??
+                      "Não foi possível salvar seu perfil.",
+                  );
                 } finally {
                   setIsLoading(false);
                 }
