@@ -1,6 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router";
 import {
-  Heart,
   Home,
   LogIn,
   LogOut,
@@ -121,12 +120,6 @@ export function Sidebar({ className, variant = "private" }: SidebarProps) {
                 <NavLink to="/recipes/me" className={linkClass}>
                   <Notebook size={18} />
                   <span>Minhas receitas</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/recipes/favorites" className={linkClass}>
-                  <Heart size={18} />
-                  <span>Favoritos</span>
                 </NavLink>
               </li>
               <li>
