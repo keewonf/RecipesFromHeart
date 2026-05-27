@@ -6,6 +6,7 @@ const usersRoutes = Router();
 const usersController = new UsersController();
 
 usersRoutes.post("/", usersController.create);
+usersRoutes.get("/me", ensureAuthenticated, usersController.show);
 usersRoutes.patch("/me", ensureAuthenticated, usersController.update);
 
 export { usersRoutes };

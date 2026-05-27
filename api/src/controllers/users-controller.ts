@@ -15,12 +15,9 @@ class UsersController {
         .max(120, { message: "Nome pode ter no máximo 120 caracteres" }),
       email: z.email({ message: "E-mail inválido" }).trim(),
       password: z.string().min(6, "Senha precisa ter no mínimo 6 caracteres"),
-      role: z
-        .enum([UserRole.ADMIN, UserRole.MODERATOR, UserRole.USER])
-        .default(UserRole.USER),
     });
 
-    const { name, email, password, role } = bodySchema.parse(req.body);
+    const { name, email, password } = bodySchema.parse(req.body);
 
     const hashedPassword = await hash(password, 8);
     let user;
@@ -31,7 +28,7 @@ class UsersController {
           name,
           email,
           password: hashedPassword,
-          role,
+          role: UserRole.USER,
         },
       });
     } catch (error) {
@@ -68,6 +65,9 @@ class UsersController {
           .string()
           .min(6, "Nova senha precisa  ter no mínimo 6 caracteres")
           .optional(),
+
+        profileImageUrl: z.url().nullable().optional(),
+        profileImageKey: z.string().min(1).nullable().optional(),
       })
       .refine(
         (data) => {
@@ -107,6 +107,8 @@ class UsersController {
       const updatedData: {
         name?: string;
         password?: string;
+        profileImageUrl?: string | null;
+        profileImageKey?: string | null;
       } = {};
 
       if (data.name) {
@@ -128,6 +130,14 @@ class UsersController {
         updatedData.password = hashedPassword;
       }
 
+      if (data.profileImageUrl !== undefined) {
+        updatedData.profileImageUrl = data.profileImageUrl;
+      }
+
+      if (data.profileImageKey !== undefined) {
+        updatedData.profileImageKey = data.profileImageKey;
+      }
+
       return tx.user.update({
         where: {
           id: user.id,
@@ -139,6 +149,8 @@ class UsersController {
           name: true,
           email: true,
           role: true,
+          profileImageUrl: true,
+          profileImageKey: true,
           createdAt: true,
           updatedAt: true,
         },
@@ -146,6 +158,34 @@ class UsersController {
     });
 
     return res.json({ user: updatedUser });
+  }
+
+  async show(req: Request, res: Response) {
+    if (!req.user) {
+      throw new AppError("Usuário não encontrado", 401);
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.user.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        profileImageUrl: true,
+        profileImageKey: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new AppError("Usuário não encontrado", 401);
+    }
+
+    return res.json({ user });
   }
 }
 
