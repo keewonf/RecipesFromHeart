@@ -24,7 +24,7 @@ class UploadsController {
         .object({
           filename: z.string().min(1, { message: "Um arquivo é obrigatório" }),
           mimetype: z.string(),
-          size: z.number().positive,
+          size: z.number().positive(),
           path: z.string(),
         })
         .loose();
