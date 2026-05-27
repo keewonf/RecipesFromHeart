@@ -17,6 +17,7 @@ function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
       throw new AppError("JWT token não encontrado", 401);
     }
 
+    // Expected format: "Bearer <token>".
     const [, token] = authHeader.split(" ");
 
     const { role, sub: user_id } = verify(
@@ -24,6 +25,7 @@ function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
       authConfig.jwt.secret,
     ) as TokenPayLoad;
 
+    // Make user available in req.user
     req.user = {
       id: user_id,
       role,
@@ -31,6 +33,7 @@ function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
 
     return next();
   } catch (error) {
+    // Keep same public message for all token failures to avoid leaking details.
     throw new AppError("JWT token inválido", 401);
   }
 }

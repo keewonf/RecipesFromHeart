@@ -9,16 +9,19 @@ const errorHandling: ErrorRequestHandler = (
   res: Response,
   _: NextFunction,
 ) => {
+  // Domain/application errors are expected and already carry HTTP status.
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({ message: error.message });
   }
 
+  // Zod errors from request validation are mapped to a client-friendly format.
   if (error instanceof ZodError) {
     return res
       .status(400)
       .json({ message: "Validation error!", issues: z.treeifyError(error) });
   }
 
+  // Multer errors happen before controller logic (limits, malformed upload, etc).
   if (error instanceof multer.MulterError) {
     if (error.code === "LIMIT_FILE_SIZE") {
       return res
@@ -33,6 +36,7 @@ const errorHandling: ErrorRequestHandler = (
     error instanceof Error &&
     error.message === "Formato de arquivo inválido"
   ) {
+    // Keep this explicit so frontend can show a precise upload hint.
     return res.status(400).json({
       message: "Formato de arquivo inválido. Use JPG, PNG ou WEBP.",
     });
