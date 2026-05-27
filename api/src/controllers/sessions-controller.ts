@@ -15,6 +15,7 @@ class SessionsController {
   async create(req: Request, res: Response) {
     const { email, password } = bodySchema.parse(req.body);
 
+    // Fetch only necessary fields for authentication performance
     const user = await prisma.user.findUnique({
       where: { email },
       select: {
@@ -41,6 +42,7 @@ class SessionsController {
 
     const { secret, expiresIn } = authConfig.jwt;
 
+    // Role is embedded in token so API can authorize without extra DB lookups.
     const token = sign({ role: user.role }, secret, {
       subject: user.id,
       expiresIn,

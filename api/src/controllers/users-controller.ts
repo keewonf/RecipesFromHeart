@@ -19,6 +19,7 @@ class UsersController {
 
     const { name, email, password } = bodySchema.parse(req.body);
 
+    // Password hashing with bcrypt (8 rounds) to balance security and API performance
     const hashedPassword = await hash(password, 8);
     let user;
 
@@ -32,6 +33,8 @@ class UsersController {
         },
       });
     } catch (error) {
+      // Handle unique constraint error (duplicate email)
+      // P2002: Code for unique constraint violation
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"
@@ -71,6 +74,7 @@ class UsersController {
       })
       .refine(
         (data) => {
+          // Require current password when user is changing password
           if (data.newPassword && !data.currentPassword) {
             return false;
           }
@@ -93,6 +97,7 @@ class UsersController {
       throw new AppError("Usuário não encontrado", 401);
     }
 
+    // Ensures user update (including optional password change) is executed safely in a single transaction
     const updatedUser = await prisma.$transaction(async (tx) => {
       const user = await tx.user.findUnique({
         where: {

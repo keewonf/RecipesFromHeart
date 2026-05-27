@@ -29,6 +29,7 @@ const ingredientSchema = z.object({
     .optional(),
 });
 
+// Schema for creating a recipe (all required fields)
 const bodySchema = z.object({
   title: z
     .string()
@@ -73,6 +74,7 @@ const bodySchema = z.object({
     .min(1, "Adicione pelo menos um ingrediente"),
 });
 
+// Schema for partial recipe updates (all fields optional)
 const updateBodySchema = z.object({
   title: z
     .string()
@@ -128,6 +130,7 @@ const paramsSchema = z.object({
 });
 
 const querySchema = z.object({
+  // Use empty string as default to simplify filtering logic
   name: z.string().trim().optional().default(""),
   page: z.coerce.number().int().positive().optional().default(1),
   perPage: z.coerce.number().int().positive().max(50).optional().default(10),
@@ -151,6 +154,7 @@ class RecipesController {
       throw new AppError("Usuário não encontrado", 401);
     }
 
+    // Keep ingredient order consistent when saving and rendering
     const ingredients = data.ingredients.map((ingredient, index) => ({
       ...ingredient,
       position: index,
@@ -206,9 +210,11 @@ class RecipesController {
     return res.status(201).json({ recipe });
   }
 
+  // Lists only the logged-in user's recipes with pagination and optional search filter
   async index(req: Request, res: Response) {
     const { name, page, perPage } = querySchema.parse(req.query);
 
+    // Calculate how many items to skip for pagination
     const skip = (page - 1) * perPage;
 
     if (!req.user) {
@@ -279,11 +285,13 @@ class RecipesController {
         page,
         perPage,
         totalRecords,
+        // Keep UI pagination stable even when list is empty.
         totalPages: totalPages > 0 ? totalPages : 1,
       },
     });
   }
 
+  // Lists community public recipes
   async community(req: Request, res: Response) {
     const { name, page, perPage } = querySchema.parse(req.query);
 
@@ -353,6 +361,9 @@ class RecipesController {
     });
   }
 
+  // Returns a single recipe by id with access control:
+  // - public recipes can be viewed by anyone authenticated
+  // - private recipes are only accessible by the owner
   async show(req: Request, res: Response) {
     const { id } = paramsSchema.parse(req.params);
 
@@ -408,6 +419,7 @@ class RecipesController {
       throw new AppError("Receita não encontrada", 404);
     }
 
+    // Return 404 for unauthorized private recipes to avoid leaking existence.
     if (!recipe.isPublic && recipe.userId !== req.user.id) {
       throw new AppError("Receita não encontrada", 404);
     }
@@ -484,6 +496,7 @@ class RecipesController {
 
     const { ingredients, ...updatedData } = data;
 
+    // Ensures recipe update and ingredient replacement happen together safely with $transaction
     const updatedRecipe = await prisma.$transaction(async (tx) => {
       await tx.recipe.update({
         where: { id: recipe.id },
@@ -491,12 +504,14 @@ class RecipesController {
       });
 
       if (ingredients) {
+        // Replace all ingredients instead of updating individually for simplicity
         await tx.recipeIngredient.deleteMany({
           where: {
             recipeId: recipe.id,
           },
         });
 
+        // Add recipeId and position to each ingredient before saving to maintain relation and order
         const formattedIngredients = ingredients.map((ingredient, index) => ({
           ...ingredient,
           recipeId: recipe.id,
