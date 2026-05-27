@@ -336,7 +336,7 @@ export function CreateRecipe() {
               name="preparationTime"
               render={({ field }) => (
                 <Input
-                  legend="Tempo de preparo"
+                  legend="Tempo de preparo (min)"
                   required
                   type="number"
                   placeholder="0"
