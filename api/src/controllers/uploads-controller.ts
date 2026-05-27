@@ -63,13 +63,13 @@ class UploadsController {
     }
   }
 
-  async createRecipeImage(req: Request, res: Response) {
+  createRecipeImage = async (req: Request, res: Response) => {
     return this.uploadFile(req, res, "recipes");
-  }
+  };
 
-  async createProfileImage(req: Request, res: Response) {
+  createProfileImage = async (req: Request, res: Response) => {
     return this.uploadFile(req, res, "profiles");
-  }
+  };
 }
 
 export { UploadsController };
