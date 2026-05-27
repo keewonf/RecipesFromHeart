@@ -320,6 +320,7 @@ class RecipesController {
         resume: true,
         preparationTime: true,
         portions: true,
+        isPublic: true,
         imageUrl: true,
         imageKey: true,
         createdAt: true,
