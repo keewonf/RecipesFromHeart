@@ -412,6 +412,13 @@ class RecipesController {
         imageKey: true,
         originalFilename: true,
         userId: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profileImageUrl: true,
+          },
+        },
         createdAt: true,
         updatedAt: true,
         ingredients: {
