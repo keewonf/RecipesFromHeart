@@ -7,7 +7,8 @@ type MyRecipesProps = {
 };
 
 export function MyRecipes({ showHeader = true }: MyRecipesProps) {
-  const { recipes, loading } = useRecipes({ type: "mine" });
+  const { recipes, loading, pagination, goToNextPage, goToPreviousPage } =
+    useRecipes({ type: "mine" });
 
   return (
     <div className="p-4">
@@ -25,7 +26,13 @@ export function MyRecipes({ showHeader = true }: MyRecipesProps) {
         </div>
       )}
 
-      <RecipeList recipes={recipes} loading={loading} />
+      <RecipeList
+        recipes={recipes}
+        loading={loading}
+        pagination={pagination}
+        onNext={goToNextPage}
+        onPrevious={goToPreviousPage}
+      />
     </div>
   );
 }

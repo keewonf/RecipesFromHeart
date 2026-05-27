@@ -1,41 +1,29 @@
-import { useEffect, useMemo, useState } from "react";
 import { Pagination } from "../Pagination";
 import { RecipeCard } from "./RecipeCard";
+import type { RecipeSummaryData } from "../../dtos/recipe";
 
 type RecipeListProps = {
-  recipes: readonly any[];
+  recipes: readonly RecipeSummaryData[];
   loading?: boolean;
+  pagination?: {
+    page: number;
+    perPage: number;
+    totalRecords: number;
+    totalPages: number;
+  };
+  onNext?: () => void;
+  onPrevious?: () => void;
 };
 
-const PER_PAGE = 10;
-
-export function RecipeList({ recipes, loading }: RecipeListProps) {
-  const [page, setPage] = useState(1);
-  const totalOfPage = useMemo(
-    () => Math.max(1, Math.ceil(recipes.length / PER_PAGE)),
-    [recipes.length],
-  );
-
-
-  const currentRecipes = useMemo(() => {
-    const start = (page - 1) * PER_PAGE;
-    return recipes.slice(start, start + PER_PAGE);
-  }, [page, recipes]);
-
-  function handlePagination(action: "next" | "previous") {
-    setPage((prev) => {
-      if (action === "next" && prev < totalOfPage) {
-        return prev + 1;
-      } else if (action === "previous" && prev > 1) {
-        return prev - 1;
-      }
-      return prev;
-    });
-  }
-
-  useEffect(() => {
-    setPage(1);
-  }, [recipes]);
+export function RecipeList({
+  recipes,
+  loading,
+  pagination,
+  onNext,
+  onPrevious,
+}: RecipeListProps) {
+  const currentPage = pagination?.page ?? 1;
+  const totalOfPage = pagination?.totalPages ?? 1;
 
   if (loading) return <div className="p-4">Carregando...</div>;
 
@@ -45,16 +33,16 @@ export function RecipeList({ recipes, loading }: RecipeListProps) {
   return (
     <div>
       <div className="grid max-h-140 grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 overflow-y-scroll">
-        {currentRecipes.map((r, i) => (
+        {recipes.map((r, i) => (
           <RecipeCard key={r.id ?? i} recipe={r} />
         ))}
       </div>
 
-      {totalOfPage > 1 && (
+      {totalOfPage > 1 && onNext && onPrevious && (
         <Pagination
-          onNext={() => handlePagination("next")}
-          onPrevious={() => handlePagination("previous")}
-          current={page}
+          onNext={onNext}
+          onPrevious={onPrevious}
+          current={currentPage}
           total={totalOfPage}
         />
       )}

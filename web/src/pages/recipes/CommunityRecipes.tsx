@@ -2,7 +2,13 @@ import { RecipeList } from "../../components/recipes/RecipeList";
 import { useRecipes } from "../../hooks/useRecipes";
 
 export function CommunityRecipes() {
-  const { recipes, loading } = useRecipes({ type: "community" });
+  const {
+    recipes,
+    loading,
+    pagination,
+    goToNextPage,
+    goToPreviousPage,
+  } = useRecipes({ type: "community" });
 
   return (
     <div className="p-4">
@@ -12,7 +18,13 @@ export function CommunityRecipes() {
         </h1>
       </div>
 
-      <RecipeList recipes={recipes} loading={loading} />
+      <RecipeList
+        recipes={recipes}
+        loading={loading}
+        pagination={pagination}
+        onNext={goToNextPage}
+        onPrevious={goToPreviousPage}
+      />
     </div>
   );
 }
