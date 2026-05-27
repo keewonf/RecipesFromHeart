@@ -10,6 +10,7 @@ import { Input } from "../../components/Input";
 import { Loading } from "../../components/Loading";
 import { RecipeImageInput } from "../../components/recipes/RecipeImageInput";
 import { api } from "../../services/api";
+import { classMerge } from "../../utils/classMerge";
 import type {
   CreateRecipeResponse,
   RecipeResponse,
@@ -388,20 +389,43 @@ export function CreateRecipe() {
           <Controller
             control={control}
             name="isPublic"
-            render={({ field }) => (
-              <label className="flex items-center justify-between gap-4 rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm font-semibold text-text-primary shadow-[0_1px_8px_rgba(41,27,26,0.06)] md:rounded-3xl md:text-base">
-                <span>Receita pública</span>
-                <input
-                  type="checkbox"
-                  checked={field.value}
-                  onChange={(event) => field.onChange(event.target.checked)}
-                  onBlur={field.onBlur}
-                  name={field.name}
-                  ref={field.ref}
-                  className="h-5 w-5 cursor-pointer accent-surface-dark"
-                />
-              </label>
-            )}
+            render={({ field }) => {
+              const isPublic = Boolean(field.value);
+
+              return (
+                <div className="flex items-center justify-between gap-4 rounded-3xl px-1 py-1">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-xs uppercase text-text-primary md:text-sm">
+                      Visibilidade
+                    </span>
+                    <span className="text-sm font-semibold text-text-secondary">
+                      {isPublic ? "Receita pública" : "Receita privada"}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    aria-pressed={isPublic}
+                    onClick={() => field.onChange(!isPublic)}
+                    onBlur={field.onBlur}
+                    ref={field.ref}
+                    className={classMerge(
+                      "inline-flex h-9 w-18 items-center rounded-full border p-1 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light",
+                      isPublic
+                        ? "border-surface-dark bg-surface-dark"
+                        : "border-stone-400 bg-stone-300",
+                    )}
+                  >
+                    <span
+                      className={classMerge(
+                        "h-7 w-7 rounded-full bg-white shadow-sm transition-transform duration-200",
+                        isPublic ? "translate-x-9" : "translate-x-0",
+                      )}
+                    />
+                  </button>
+                </div>
+              );
+            }}
           />
 
           <section className="flex flex-col gap-4">
