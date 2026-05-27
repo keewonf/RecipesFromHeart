@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router";
+import { Edit3 } from "lucide-react";
+import { Button } from "../Button";
 import type { RecipeSummaryData } from "../../dtos/recipe";
 
 type RecipeCardProps = {
   recipe: RecipeSummaryData;
+  showEdit?: boolean;
 };
 
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export function RecipeCard({ recipe, showEdit }: RecipeCardProps) {
   const navigate = useNavigate();
 
   function handleOpenRecipe() {
@@ -26,7 +29,21 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
         }
       }}
     >
-      <div className="flex aspect-4/3 items-center justify-center overflow-hidden rounded-xl bg-gray-100">
+      <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-xl bg-gray-100">
+        {showEdit && (
+          <div className="absolute top-2 right-2 z-10">
+            <Button
+              variant="icon"
+              title="Editar receita"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/recipes/edit/${recipe.id}`, { state: recipe });
+              }}
+            >
+              <Edit3 />
+            </Button>
+          </div>
+        )}
         {recipe.imageUrl ? (
           <img
             src={recipe.imageUrl}

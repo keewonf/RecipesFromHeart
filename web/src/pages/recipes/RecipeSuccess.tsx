@@ -6,6 +6,7 @@ import recipeImg from "../../assets/main-image.png";
 import bgImg from "../../assets/bg-image.jpg";
 import { Button } from "../../components/Button";
 import { Loading } from "../../components/Loading";
+import { useAuth } from "../../hooks/useAuth";
 import { api } from "../../services/api";
 import type { RecipeResponse, RecipeSummaryData } from "../../dtos/recipe";
 
@@ -13,11 +14,12 @@ type RecipeSuccessLocationState =
   | RecipeSummaryData
   | {
       recipe: RecipeSummaryData;
-      showEditButton?: boolean;
+      showSuccessMessage?: boolean;
     }
   | null;
 
 export function RecipeSuccess() {
+  const { session } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const locationState = location.state as RecipeSuccessLocationState;
@@ -25,8 +27,10 @@ export function RecipeSuccess() {
     locationState && "recipe" in locationState
       ? locationState.recipe
       : locationState;
-  const showEditButton = Boolean(
-    locationState && "recipe" in locationState && locationState.showEditButton,
+  const showCreationMessage = Boolean(
+    locationState &&
+    "recipe" in locationState &&
+    locationState.showSuccessMessage,
   );
   const [recipe, setRecipe] = useState<RecipeSummaryData | null>(initialRecipe);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,6 +79,9 @@ export function RecipeSuccess() {
 
   const previewImageUrl = recipe?.imageUrl ?? recipeImg;
   const ingredients = recipe?.ingredients ?? [];
+  const canEditRecipe = Boolean(
+    session?.user.id && recipe?.userId && session.user.id === recipe.userId,
+  );
 
   function handleDownloadHtml() {
     console.log("cliquei aqui");
@@ -108,7 +115,7 @@ export function RecipeSuccess() {
 
         <main className="flex flex-col gap-6 p-0 md:p-6">
           <section id="about">
-            {showEditButton && (
+            {showCreationMessage && (
               <p className="mb-2 text-center text-sm font-semibold uppercase tracking-[0.2em] text-text-primary/60">
                 Receita criada com sucesso
               </p>
@@ -116,7 +123,7 @@ export function RecipeSuccess() {
             <h1 className="mb-4 text-center text-2xl font-normal leading-[140%] text-text-primary md:text-[2.5rem]">
               {recipe.title}
             </h1>
-            {showEditButton && (
+            {canEditRecipe && (
               <div className="mb-4 flex justify-center sm:justify-end">
                 <Button
                   className="w-full px-4 text-sm sm:w-auto"

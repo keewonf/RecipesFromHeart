@@ -13,6 +13,8 @@ type RecipeListProps = {
   };
   onNext?: () => void;
   onPrevious?: () => void;
+  /** When true, show edit controls on each card (useful for /recipes/me) */
+  showEdit?: boolean;
 };
 
 export function RecipeList({
@@ -21,6 +23,7 @@ export function RecipeList({
   pagination,
   onNext,
   onPrevious,
+  showEdit,
 }: RecipeListProps) {
   const currentPage = pagination?.page ?? 1;
   const totalOfPage = pagination?.totalPages ?? 1;
@@ -38,7 +41,7 @@ export function RecipeList({
     <div>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {recipes.map((r, i) => (
-          <RecipeCard key={r.id ?? i} recipe={r} />
+          <RecipeCard key={r.id ?? i} recipe={r} showEdit={showEdit} />
         ))}
       </div>
 

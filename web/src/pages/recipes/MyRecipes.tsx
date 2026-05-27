@@ -32,6 +32,7 @@ export function MyRecipes({ showHeader = true }: MyRecipesProps) {
         pagination={pagination}
         onNext={goToNextPage}
         onPrevious={goToPreviousPage}
+        showEdit={true}
       />
     </div>
   );

@@ -246,7 +246,7 @@ export function CreateRecipe() {
       navigate("/recipes/preview", {
         state: {
           recipe: response.data.recipe,
-          showEditButton: true,
+          showSuccessMessage: true,
         },
       });
     } catch (error) {

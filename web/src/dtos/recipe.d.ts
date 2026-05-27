@@ -32,6 +32,7 @@ export type RecipeSummaryData = {
   portions: number;
   preparationMethod: string;
   isPublic: boolean;
+  userId?: string;
   imageUrl: string | null;
   imageKey: string | null;
   ingredients: RecipeIngredientData[];
