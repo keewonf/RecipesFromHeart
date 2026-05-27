@@ -10,6 +10,7 @@ class CloudinaryStorage {
     folder: CloudinaryFolder = "recipes",
   ) {
     try {
+      // Use filename without extension as Cloudinary public_id
       const result = await cloudinary.uploader.upload(filePath, {
         public_id: fileName.replace(/\.[^/.]+$/, ""),
         resource_type: "auto",
@@ -21,6 +22,7 @@ class CloudinaryStorage {
         publicId: result.public_id,
       };
     } catch (error) {
+      // Keep provider-specific details in logs, return generic app error upstream.
       console.error("Cloudinary upload error:", error);
       throw new AppError("Failed to upload file to cloud storage");
     }
