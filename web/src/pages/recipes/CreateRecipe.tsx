@@ -10,7 +10,6 @@ import { Input } from "../../components/Input";
 import { Loading } from "../../components/Loading";
 import { RecipeImageInput } from "../../components/recipes/RecipeImageInput";
 import { api } from "../../services/api";
-import { classMerge } from "../../utils/classMerge";
 import type {
   CreateRecipeResponse,
   RecipeResponse,
@@ -389,63 +388,20 @@ export function CreateRecipe() {
           <Controller
             control={control}
             name="isPublic"
-            render={({ field }) => {
-              const isPublic = Boolean(field.value);
-
-              return (
-                <fieldset className="rounded-3xl border border-stone-300 bg-white p-3 shadow-[0_1px_8px_rgba(41,27,26,0.06)] md:p-4">
-                  <legend className="mb-3 text-xxs uppercase text-text-primary md:text-xs">
-                    Visibilidade
-                  </legend>
-
-                  <button
-                    type="button"
-                    aria-pressed={isPublic}
-                    onClick={() => field.onChange(!isPublic)}
-                    className={classMerge(
-                      "flex w-full items-center justify-between gap-4 rounded-3xl border px-4 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light",
-                      isPublic
-                        ? "border-surface-dark bg-surface-light-dark text-text-primary shadow-sm"
-                        : "border-stone-300 bg-stone-50 text-text-secondary hover:border-surface-dark hover:bg-stone-100",
-                    )}
-                  >
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold md:text-base">
-                        {isPublic ? "Receita pública" : "Receita privada"}
-                      </p>
-                      <p className="mt-1 text-xs leading-5 opacity-80 md:text-sm">
-                        {isPublic
-                          ? "Aparece para outras pessoas na comunidade."
-                          : "Só você poderá ver e editar essa receita."}
-                      </p>
-                    </div>
-
-                    <span
-                      className={classMerge(
-                        "relative inline-flex h-8 w-16 shrink-0 rounded-full border p-1 transition-colors duration-200",
-                        isPublic
-                          ? "border-surface-dark bg-surface-dark"
-                          : "border-stone-400 bg-stone-300",
-                      )}
-                      aria-hidden="true"
-                    >
-                      <span
-                        className={classMerge(
-                          "h-6 w-6 rounded-full bg-white shadow-sm transition-transform duration-200",
-                          isPublic ? "translate-x-8" : "translate-x-0",
-                        )}
-                      />
-                    </span>
-                  </button>
-
-                  <p className="mt-3 text-sm text-text-secondary">
-                    {isPublic
-                      ? "Visível na comunidade, perfil e listagens públicas."
-                      : "Salva apenas na sua conta, sem aparecer para outras pessoas."}
-                  </p>
-                </fieldset>
-              );
-            }}
+            render={({ field }) => (
+              <label className="flex items-center justify-between gap-4 rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm font-semibold text-text-primary shadow-[0_1px_8px_rgba(41,27,26,0.06)] md:rounded-3xl md:text-base">
+                <span>Receita pública</span>
+                <input
+                  type="checkbox"
+                  checked={field.value}
+                  onChange={(event) => field.onChange(event.target.checked)}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  ref={field.ref}
+                  className="h-5 w-5 cursor-pointer accent-surface-dark"
+                />
+              </label>
+            )}
           />
 
           <section className="flex flex-col gap-4">
