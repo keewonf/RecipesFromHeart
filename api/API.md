@@ -1,15 +1,15 @@
 # API
 
-This document summarizes the current HTTP contract of the backend.
+This file describes the backend endpoints and their responses.
 
-## General conventions
+## Conventions
 
 - Successful single-resource responses use `{ recipe }` or `{ user }` when the route returns one entity.
-- List responses use `{ recipes, pagination }`.
-- Error responses use a `message` field.
-- Missing recipes in `GET /recipes/:id`, `PATCH /recipes/:id`, and `DELETE /recipes/:id` return `404`.
+- List return `{ recipes, pagination }`.
+- Errors always returns `message`.
+- Not found returns `404` for missing recipes or unauthorized access.
 
-## Authentication
+## Auth
 
 ### `POST /sessions`
 
@@ -32,7 +32,7 @@ Response:
 
 ### `POST /users`
 
-Creates a user.
+Creates a new user.
 
 ### `GET /users/me`
 
