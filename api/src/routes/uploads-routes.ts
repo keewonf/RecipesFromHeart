@@ -7,6 +7,7 @@ import { UploadsController } from "@/controllers/uploads-controller";
 const uploadsRoutes = Router();
 const uploadsController = new UploadsController();
 
+//Multer middleware for uploadsRoutes
 const upload = multer(uploadConfig.MULTER);
 
 uploadsRoutes.post(

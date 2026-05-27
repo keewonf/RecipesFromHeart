@@ -12,6 +12,8 @@ const recipesController = new RecipesController();
 //Public routes
 routes.use("/sessions", sessionsRoutes);
 routes.use("/users", usersRoutes);
+
+// Public endpoint for community/landing page (no authentication required)
 routes.get("/recipes", recipesController.community);
 
 //Private routes
