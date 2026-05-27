@@ -10,11 +10,11 @@ type Props = {
 
 export function Pagination({ current, total, onNext, onPrevious }: Props) {
   return (
-    <div className="flex flex-1 justify-center items-center gap-2 mt-4">
+    <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
       <Button variant="icon" onClick={onPrevious} disabled={current === 1}>
         <ArrowLeft />
       </Button>
-      <span className="text-2xl text-surface-dark">
+      <span className="text-sm font-semibold text-surface-dark md:text-2xl">
         {current}/{total}
       </span>
       <Button variant="icon" onClick={onNext} disabled={current === total}>

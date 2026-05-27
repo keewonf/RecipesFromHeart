@@ -68,18 +68,23 @@ export function SignUp() {
 
   return (
     <>
-      <h1 className="mb-8 text-3xl font-bold text-text-secondary">
+      <h1 className="mb-6 text-2xl font-bold text-text-secondary md:mb-8 md:text-3xl">
         Registre-se
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex flex-col gap-4 "
+        className="flex w-full flex-col gap-4"
       >
         <Controller
           control={control}
           name="name"
           render={({ field }) => (
-            <Input required placeholder="Nome" error={errors.name?.message} {...field} />
+            <Input
+              required
+              placeholder="Nome"
+              error={errors.name?.message}
+              {...field}
+            />
           )}
         />
 
@@ -87,7 +92,14 @@ export function SignUp() {
           control={control}
           name="email"
           render={({ field }) => (
-            <Input required type="email" placeholder="Email" autoComplete="email" error={errors.email?.message} {...field} />
+            <Input
+              required
+              type="email"
+              placeholder="Email"
+              autoComplete="email"
+              error={errors.email?.message}
+              {...field}
+            />
           )}
         />
 
@@ -95,7 +107,14 @@ export function SignUp() {
           control={control}
           name="password"
           render={({ field }) => (
-            <Input required type="password" placeholder="senha" autoComplete="new-password" error={errors.password?.message} {...field} />
+            <Input
+              required
+              type="password"
+              placeholder="senha"
+              autoComplete="new-password"
+              error={errors.password?.message}
+              {...field}
+            />
           )}
         />
 
@@ -119,7 +138,7 @@ export function SignUp() {
         </Button>
 
         <Link
-          className="text-surface-dark font-bold m-auto hover:text-text-primary"
+          className="m-auto text-sm font-bold text-surface-dark hover:text-text-primary md:text-base"
           to="/"
         >
           Já tem conta? Faça Login!

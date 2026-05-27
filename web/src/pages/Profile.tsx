@@ -56,26 +56,30 @@ export function Profile() {
   }, [auth.session?.user]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-6">
       {isLoading ? (
         <Loading />
       ) : (
         <>
           <div className="overflow-hidden rounded-3xl">
-            <img src={bgImg} alt="" className="h-35 w-full object-cover" />
+            <img
+              src={bgImg}
+              alt=""
+              className="h-28 w-full object-cover md:h-35"
+            />
           </div>
-          <div className="-mt-8 flex items-center gap-4 px-4">
+          <div className="-mt-8 flex flex-col items-center gap-4 px-2 text-center md:flex-row md:items-end md:px-4 md:text-left">
             <div className="inline-flex rounded-full bg-white p-1 shadow-[0_6px_20px_rgba(41,27,26,0.16)]">
               <img
                 src={previewUrl ?? user?.profileImageUrl ?? profileImg}
                 alt={user?.name ?? "Imagem de perfil"}
-                className="h-35 w-35 rounded-full object-cover"
+                className="h-24 w-24 rounded-full object-cover md:h-35 md:w-35"
               />
             </div>
 
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold text-text-primary">
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center sm:justify-start">
+                <h1 className="text-2xl font-bold text-text-primary md:text-3xl">
                   {user?.name ?? "Perfil"}
                 </h1>
                 {!isEditing && (
@@ -86,13 +90,15 @@ export function Profile() {
                       setSelectedFile(null);
                       setIsEditing(true);
                     }}
-                    className="text-sm px-3 py-1 rounded-full border border-surface-dark hover:bg-surface-dark"
+                    className="rounded-full border border-surface-dark px-3 py-1 text-sm transition-colors hover:bg-surface-dark hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light"
                   >
                     Editar perfil
                   </button>
                 )}
               </div>
-              <p className="text-sm text-text-secondary">{user?.email}</p>
+              <p className="text-sm text-text-secondary md:text-base">
+                {user?.email}
+              </p>
             </div>
           </div>
 
@@ -135,20 +141,20 @@ export function Profile() {
                   setIsLoading(false);
                 }
               }}
-              className="mt-4 p-4 bg-surface-light rounded-2xl"
+              className="mt-4 rounded-2xl bg-surface-light p-4"
             >
               <div className="flex flex-col gap-3">
                 <label className="flex flex-col">
-                  <span className="text-sm font-medium mb-1">Nome</span>
+                  <span className="mb-1 text-sm font-medium">Nome</span>
                   <input
                     value={formName ?? ""}
                     onChange={(e) => setFormName(e.target.value)}
-                    className="rounded-md border p-2"
+                    className="rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm outline-none transition-colors focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10"
                   />
                 </label>
 
                 <label className="flex flex-col">
-                  <span className="text-sm font-medium mb-1">
+                  <span className="mb-1 text-sm font-medium">
                     Foto de perfil
                   </span>
                   <input
@@ -162,13 +168,14 @@ export function Profile() {
                         setPreviewUrl(URL.createObjectURL(f));
                       }
                     }}
+                    className="text-sm"
                   />
                 </label>
 
-                <div className="flex gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row">
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-surface-dark text-white rounded-2xl"
+                    className="rounded-2xl bg-surface-dark px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light"
                   >
                     Salvar
                   </button>
@@ -180,7 +187,7 @@ export function Profile() {
                       setPreviewUrl(null);
                       if (fileInputRef.current) fileInputRef.current.value = "";
                     }}
-                    className="px-4 py-2 border rounded-2xl"
+                    className="rounded-2xl border border-stone-300 px-4 py-3 text-sm font-semibold transition-colors hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light"
                   >
                     Cancelar
                   </button>
@@ -188,7 +195,7 @@ export function Profile() {
               </div>
             </form>
           )}
-          <p className="mt-3 px-4 text-lg leading-7 text-text-primary">
+          <p className="mt-3 px-2 text-base leading-7 text-text-primary md:px-4 md:text-lg">
             {user?.role === "ADMIN"
               ? "Administrador da plataforma"
               : "Amante de doces e café. Compartilhando minhas receitas caseiras"}

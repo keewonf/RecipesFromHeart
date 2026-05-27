@@ -84,25 +84,25 @@ export function RecipeSuccess() {
 
   return (
     <div
-      className="flex flex-col justify-center items-center m-0 bg-text-on-bg bg-cover"
+      className="flex min-h-screen flex-col items-center justify-center bg-text-on-bg bg-cover bg-center px-4 py-6"
       style={{ backgroundImage: `url(${bgImg})` }}
     >
-      <div className="w-200 p-6 bg-surface-light rounded-3xl flex flex-col mt-12 mb-7 text-text-secondary">
+      <div className="mt-6 mb-7 flex w-full max-w-4xl flex-col rounded-3xl bg-surface-light p-4 text-text-secondary shadow-[0_8px_30px_rgba(41,27,26,0.10)] md:p-6">
         <div className="mb-4 text-center">
           {showEditButton && (
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-text-primary/60">
               Receita criada com sucesso
             </p>
           )}
-          <h1 className="mt-2 leading-[140%] text-[2.5rem] text-text-primary font-normal">
+          <h1 className="mt-2 text-2xl font-normal leading-[140%] text-text-primary md:text-[2.5rem]">
             {recipe.title}
           </h1>
         </div>
 
-        <div className="mb-4 flex items-center justify-end">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
           {showEditButton && (
             <Button
-              className="mr-3 w-auto px-4 text-sm"
+              className="w-full px-4 text-sm sm:w-auto"
               onClick={() =>
                 navigate(`/recipes/edit/${recipe.id}`, { state: recipe })
               }
@@ -116,14 +116,14 @@ export function RecipeSuccess() {
         </div>
 
         <img
-          className="object-contain w-full h-100 rounded-2xl mb-6"
+          className="mb-6 h-64 w-full rounded-2xl object-cover sm:h-80 md:h-100"
           src={previewImageUrl}
           alt="Pré-visualização da imagem da receita"
         />
 
-        <main className="flex flex-col p-6 gap-6">
+        <main className="flex flex-col gap-6 p-0 md:p-6">
           <section id="about">
-            <p>
+            <p className="text-sm leading-7 text-text-secondary md:text-base">
               {recipe.resume}
               <br />
               <br />
@@ -134,10 +134,10 @@ export function RecipeSuccess() {
           </section>
 
           <section id="ingredients">
-            <h2 className="text-text-primary font-normal leading-[150%] mb-1 text-2xl">
+            <h2 className="mb-1 text-xl font-normal leading-[150%] text-text-primary md:text-2xl">
               Ingredientes
             </h2>
-            <ul className="list-inside pl-[0.6em] list-disc">
+            <ul className="list-inside list-disc pl-[0.6em] text-sm leading-7 md:text-base">
               {recipe.ingredients.map((ingredient) => (
                 <li
                   key={`${ingredient.name}-${ingredient.quantity}-${ingredient.unit}`}
@@ -152,11 +152,13 @@ export function RecipeSuccess() {
           </section>
 
           <section id="preparation">
-            <h2 className="text-text-primary font-normal mb-1 text-2xl">
+            <h2 className="mb-1 text-xl font-normal text-text-primary md:text-2xl">
               Modo de preparo
             </h2>
 
-            <p>{recipe.preparationMethod}</p>
+            <p className="text-sm leading-7 md:text-base">
+              {recipe.preparationMethod}
+            </p>
           </section>
         </main>
       </div>

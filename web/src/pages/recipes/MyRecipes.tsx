@@ -11,15 +11,15 @@ export function MyRecipes({ showHeader = true }: MyRecipesProps) {
     useRecipes({ type: "mine" });
 
   return (
-    <div className="p-4">
+    <div className="p-4 md:p-6">
       {showHeader && (
-        <div className="mb-5 flex items-center justify-between">
-          <h1 className="mb-4 text-2xl font-bold text-text-primary">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="mb-0 text-2xl font-bold text-text-primary md:text-3xl">
             Minhas receitas
           </h1>
           <Link
             to="/recipes/new"
-            className="flex h-12 items-center justify-center rounded-3xl border border-surface-dark bg-surface-dark p-3 text-xl text-white transition-colors duration-200 ease-linear hover:bg-text-primary"
+            className="flex h-11 items-center justify-center rounded-2xl border border-surface-dark bg-surface-dark px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 ease-linear hover:bg-text-primary md:h-12 md:rounded-3xl md:text-base"
           >
             Nova receita
           </Link>

@@ -12,56 +12,65 @@ export function Sidebar({ className }: SidebarProps) {
   const auth = useAuth();
   const navigate = useNavigate();
 
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    classMerge([
+      "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-bold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light-dark md:text-base",
+      isActive
+        ? "bg-surface-light text-text-primary shadow-sm"
+        : "text-surface-dark hover:bg-white/60 hover:text-text-primary",
+    ]);
+
   return (
     <aside className={classMerge(["bg-surface-light-dark", className])}>
-      <div className="my-4 flex items-center justify-center">
-        <img src={logoSvg} alt="logo" />
+      <div className="flex items-center justify-between gap-4 md:flex-col md:justify-start">
+        <img
+          src={logoSvg}
+          alt="Recipes From Heart"
+          className="h-10 w-auto md:my-4 md:h-auto"
+        />
+
+        <button
+          type="button"
+          onClick={() => {
+            auth.remove();
+            navigate("/");
+          }}
+          className="inline-flex items-center gap-2 rounded-2xl border border-surface-dark px-3 py-2 text-sm font-semibold text-surface-dark transition-colors duration-200 hover:bg-surface-dark hover:text-white md:hidden"
+        >
+          <LogOut size={16} />
+          Sair
+        </button>
       </div>
 
-      <nav className="text-surface-dark font-bold text-xl mt-8">
-        <ul className="flex flex-col gap-7">
+      <nav className="mt-4 text-surface-dark md:mt-8 md:text-xl">
+        <ul className="grid grid-cols-2 gap-2 md:flex md:flex-col md:gap-7">
           <li>
-            <NavLink
-              to="/home"
-              className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
-            >
-              <Home />
+            <NavLink to="/home" className={linkClass}>
+              <Home size={18} />
               <span>Ínicio</span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/recipes/me"
-              className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
-            >
-              <Notebook />
+            <NavLink to="/recipes/me" className={linkClass}>
+              <Notebook size={18} />
               <span>Minhas receitas</span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/recipes/community"
-              className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
-            >
-              <Users />
+            <NavLink to="/recipes/community" className={linkClass}>
+              <Users size={18} />
               <span>Receitas da comunidade</span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/recipes/favorites"
-              className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
-            >
-              <Heart />
+            <NavLink to="/recipes/favorites" className={linkClass}>
+              <Heart size={18} />
               <span>Favoritos</span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/profile/me"
-              className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
-            >
-              <User />
+            <NavLink to="/profile/me" className={linkClass}>
+              <User size={18} />
               <span>Perfil</span>
             </NavLink>
           </li>
@@ -71,9 +80,9 @@ export function Sidebar({ className }: SidebarProps) {
                 auth.remove();
                 navigate("/");
               }}
-              className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
+              className="hidden w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-sm font-bold text-surface-dark transition-colors duration-200 hover:bg-white/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light-dark md:flex md:text-base"
             >
-              <LogOut />
+              <LogOut size={18} />
               <span>Sair</span>
             </button>
           </li>

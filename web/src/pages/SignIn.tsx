@@ -56,10 +56,12 @@ export function SignIn() {
 
   return (
     <>
-      <h1 className="mb-8 text-3xl font-bold text-text-secondary">Login</h1>
+      <h1 className="mb-6 text-2xl font-bold text-text-secondary md:mb-8 md:text-3xl">
+        Login
+      </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex flex-col gap-4 "
+        className="flex w-full flex-col gap-4"
       >
         <Controller
           control={control}
@@ -95,7 +97,7 @@ export function SignIn() {
         </p>
 
         <Link
-          className="text-surface-dark ml-auto font-bold hover:text-text-primary"
+          className="ml-auto text-sm font-bold text-surface-dark hover:text-text-primary md:text-base"
           to="/help"
         >
           Esqueci a senha
@@ -105,7 +107,7 @@ export function SignIn() {
         </Button>
 
         <Link
-          className="text-surface-dark font-bold m-auto hover:text-text-primary"
+          className="m-auto text-sm font-bold text-surface-dark hover:text-text-primary md:text-base"
           to="/signup"
         >
           Ainda não tem conta? Crie uma!

@@ -28,11 +28,15 @@ export function RecipeList({
   if (loading) return <div className="p-4">Carregando...</div>;
 
   if (!recipes.length)
-    return <div className="p-4 text-muted">Nenhuma receita encontrada.</div>;
+    return (
+      <div className="p-4 text-sm text-text-secondary md:text-base">
+        Nenhuma receita encontrada.
+      </div>
+    );
 
   return (
     <div>
-      <div className="grid max-h-140 grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 overflow-y-scroll">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {recipes.map((r, i) => (
           <RecipeCard key={r.id ?? i} recipe={r} />
         ))}
