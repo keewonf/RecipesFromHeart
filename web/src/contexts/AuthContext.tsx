@@ -35,10 +35,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem(`${LOCAL_STORAGE_KEY}:token`);
 
     if (token && user) {
-      setSession({
-        token,
-        user: JSON.parse(user),
-      });
+      try {
+        setSession({
+          token,
+          user: JSON.parse(user),
+        });
+      } catch {
+        remove();
+      }
     }
 
     setIsLoading(false);

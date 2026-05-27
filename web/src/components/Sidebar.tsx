@@ -22,7 +22,7 @@ export function Sidebar({ className }: SidebarProps) {
         <ul className="flex flex-col gap-7">
           <li>
             <NavLink
-              to="/"
+              to="/home"
               className="flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 hover:text-text-primary"
             >
               <Home />

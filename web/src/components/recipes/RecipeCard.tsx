@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router";
+import type { RecipeSummaryData } from "../../dtos/recipe";
 
 type RecipeCardProps = {
-  recipe: any;
+  recipe: RecipeSummaryData;
 };
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
@@ -24,20 +25,29 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
         }
       }}
     >
-      <div className="h-36 bg-gray-100 flex items-center justify-center">
-        {/* Placeholder imagem */}
-        <span className="text-sm ">Imagem</span>
+      <div className="h-36 overflow-hidden rounded-md bg-gray-100 flex items-center justify-center">
+        {recipe.imageUrl ? (
+          <img
+            src={recipe.imageUrl}
+            alt={recipe.title}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="text-sm">Imagem</span>
+        )}
       </div>
       <div className="p-3">
         <h3 className="font-bold text-lg text-text-secondary">
-          {recipe?.title ?? "Título"}
+          {recipe.title}
         </h3>
         <p className="text-sm text-text-secondary font-bold">
-          Tempo: {recipe?.time ?? "--"}
+          Tempo: {recipe.preparationTime} min
         </p>
         <div className="mt-2 flex items-center justify-between text-text-secondary font-bold">
-          <div className="text-sm ">{recipe?.servings ?? "--"} porções</div>
-          <div className="text-sm text-yellow-500">{recipe?.rating ?? "—"}</div>
+          <div className="text-sm">{recipe.portions} porções</div>
+          <div className="text-sm text-yellow-500">
+            {recipe.isPublic ? "Pública" : "Privada"}
+          </div>
         </div>
       </div>
     </article>
