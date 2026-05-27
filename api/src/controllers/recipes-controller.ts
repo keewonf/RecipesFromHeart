@@ -188,6 +188,13 @@ class RecipesController {
         isPublic: true,
         imageUrl: true,
         imageKey: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profileImageUrl: true,
+          },
+        },
 
         ingredients: {
           orderBy: {
@@ -260,6 +267,13 @@ class RecipesController {
         imageKey: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profileImageUrl: true,
+          },
+        },
       },
     });
 
@@ -533,6 +547,13 @@ class RecipesController {
           ingredients: {
             orderBy: {
               position: "asc",
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              profileImageUrl: true,
             },
           },
         },

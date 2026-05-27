@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { Download } from "lucide-react";
 
 import recipeImg from "../../assets/main-image.png";
+import heartImg from "../../assets/heart.svg";
 import bgImg from "../../assets/bg-image.jpg";
 import { Button } from "../../components/Button";
 import { Loading } from "../../components/Loading";
@@ -79,6 +80,7 @@ export function RecipeSuccess() {
 
   const previewImageUrl = recipe?.imageUrl ?? recipeImg;
   const ingredients = recipe?.ingredients ?? [];
+  const ownerName = recipe?.user?.name ?? session?.user.name ?? "Autor";
   const canEditRecipe = Boolean(
     session?.user.id && recipe?.userId && session.user.id === recipe.userId,
   );
@@ -173,6 +175,20 @@ export function RecipeSuccess() {
             </p>
           </section>
         </main>
+
+        <footer className="mt-2 flex items-center justify-center gap-2 border-t border-text-primary/10 px-6 py-4 text-sm text-text-secondary/80 md:text-base">
+          <span>Feito com</span>
+          <img
+            src={heartImg}
+            alt=""
+            aria-hidden="true"
+            className="h-4 w-4 shrink-0"
+          />
+          <span>
+            por{" "}
+            <span className="font-semibold text-text-primary">{ownerName}</span>
+          </span>
+        </footer>
       </div>
     </div>
   );

@@ -55,9 +55,16 @@ export function RecipeCard({ recipe, showEdit }: RecipeCardProps) {
         )}
       </div>
       <div className="p-3 md:p-4">
-        <h3 className="text-base font-bold text-text-secondary md:text-lg">
-          {recipe.title}
-        </h3>
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-base font-bold leading-tight text-text-secondary md:text-lg">
+            {recipe.title}
+          </h3>
+          {recipe.user?.name && (
+            <span className="shrink-0 pt-0.5 text-right text-xs italic font-medium text-text-secondary/70 md:text-sm">
+              {recipe.user.name}
+            </span>
+          )}
+        </div>
         <p className="mt-1 text-sm font-bold text-text-secondary">
           Tempo: {recipe.preparationTime} min
         </p>

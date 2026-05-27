@@ -33,6 +33,11 @@ export type RecipeSummaryData = {
   preparationMethod: string;
   isPublic: boolean;
   userId?: string;
+  user?: {
+    id: string;
+    name: string;
+    profileImageUrl: string | null;
+  };
   imageUrl: string | null;
   imageKey: string | null;
   ingredients: RecipeIngredientData[];
