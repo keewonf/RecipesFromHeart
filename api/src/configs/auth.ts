@@ -1,6 +1,7 @@
 import { env } from "@/env";
 import { SignOptions } from "jsonwebtoken";
 
+// Explicit typing required by TypeScript for jsonwebtoken compatibility
 export const authConfig: {
   jwt: {
     secret: string;
