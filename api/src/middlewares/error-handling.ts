@@ -29,7 +29,10 @@ const errorHandling: ErrorRequestHandler = (
     return res.status(400).json({ message: error.message });
   }
 
-  if (error instanceof Error && error.message === "Formato de arquivo inválido") {
+  if (
+    error instanceof Error &&
+    error.message === "Formato de arquivo inválido"
+  ) {
     return res.status(400).json({
       message: "Formato de arquivo inválido. Use JPG, PNG ou WEBP.",
     });
