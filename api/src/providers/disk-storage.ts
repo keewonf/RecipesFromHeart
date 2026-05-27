@@ -17,7 +17,12 @@ class DiskStorage {
       return;
     }
 
-    await fs.promises.unlink(filePath);
+    try {
+      await fs.promises.unlink(filePath);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to remove temporary file:", error);
+    }
   }
 }
 

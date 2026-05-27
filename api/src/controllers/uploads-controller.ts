@@ -48,9 +48,14 @@ class UploadsController {
       }
       throw error;
     } finally {
-      // Ensure temp file is removed in all cases
+      // Ensure temp file cleanup never breaks the request lifecycle
       if (req.file) {
-        await diskStorage.deleteTmpFile(req.file.filename);
+        try {
+          await diskStorage.deleteTmpFile(req.file.filename);
+        } catch (cleanupError) {
+          // eslint-disable-next-line no-console
+          console.error("Failed to delete temporary upload file:", cleanupError);
+        }
       }
     }
   }
