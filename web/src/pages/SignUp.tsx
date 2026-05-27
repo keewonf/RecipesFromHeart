@@ -49,7 +49,7 @@ export function SignUp() {
     try {
       await api.post("/users", rest);
 
-      navigate("/");
+      navigate("/signin");
     } catch (error) {
       if (error instanceof AxiosError) {
         setError("email", {
@@ -139,7 +139,7 @@ export function SignUp() {
 
         <Link
           className="m-auto text-sm font-bold text-surface-dark hover:text-text-primary md:text-base"
-          to="/"
+          to="/signin"
         >
           Já tem conta? Faça Login!
         </Link>
