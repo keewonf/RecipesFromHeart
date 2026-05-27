@@ -19,6 +19,7 @@ export function Profile() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const selectedFileName = selectedFile?.name ?? "Nenhum arquivo selecionado";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -141,41 +142,61 @@ export function Profile() {
                   setIsLoading(false);
                 }
               }}
-              className="mt-4 rounded-2xl bg-surface-light p-4"
+              className="mt-4 rounded-3xl border border-stone-300 bg-white p-4 shadow-[0_8px_30px_rgba(41,27,26,0.08)] md:p-5"
             >
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-4">
                 <label className="flex flex-col">
-                  <span className="mb-1 text-sm font-medium">Nome</span>
+                  <span className="mb-1 text-sm font-medium text-text-primary">
+                    Nome
+                  </span>
                   <input
                     value={formName ?? ""}
                     onChange={(e) => setFormName(e.target.value)}
-                    className="rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm outline-none transition-colors focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10"
+                    className="rounded-2xl border border-stone-300 bg-surface-light px-4 py-3 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10"
+                    placeholder="Seu nome"
                   />
                 </label>
 
-                <label className="flex flex-col">
-                  <span className="mb-1 text-sm font-medium">
+                <div className="flex flex-col gap-2">
+                  <span className="text-sm font-medium text-text-primary">
                     Foto de perfil
                   </span>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const f = e.target.files && e.target.files[0];
-                      if (f) {
-                        setSelectedFile(f);
-                        setPreviewUrl(URL.createObjectURL(f));
-                      }
-                    }}
-                    className="text-sm"
-                  />
-                </label>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
+                  <label className="flex cursor-pointer flex-col gap-3 rounded-2xl border border-dashed border-stone-300 bg-surface-light px-4 py-4 transition-colors hover:border-surface-dark hover:bg-surface-light-dark/40 focus-within:border-surface-dark focus-within:ring-2 focus-within:ring-surface-dark/10">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const f = e.target.files && e.target.files[0];
+                        if (f) {
+                          setSelectedFile(f);
+                          setPreviewUrl(URL.createObjectURL(f));
+                        }
+                      }}
+                      className="sr-only"
+                    />
+
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-surface-dark text-sm font-bold text-white shadow-sm">
+                        ⬆
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-text-primary">
+                          {selectedFile ? "Trocar imagem" : "Selecionar arquivo"}
+                        </p>
+                        <p className="truncate text-xs text-text-secondary">
+                          {selectedFileName}
+                        </p>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <div className="flex flex-col gap-3 pt-1 sm:flex-row">
                   <button
                     type="submit"
-                    className="rounded-2xl bg-surface-dark px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light"
+                    className="rounded-2xl bg-surface-dark px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     Salvar
                   </button>
@@ -187,7 +208,7 @@ export function Profile() {
                       setPreviewUrl(null);
                       if (fileInputRef.current) fileInputRef.current.value = "";
                     }}
-                    className="rounded-2xl border border-stone-300 px-4 py-3 text-sm font-semibold transition-colors hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light"
+                    className="rounded-2xl border border-stone-300 px-4 py-3 text-sm font-semibold text-text-primary transition-colors hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     Cancelar
                   </button>
