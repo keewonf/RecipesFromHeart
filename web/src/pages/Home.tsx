@@ -9,7 +9,7 @@ export function Home() {
   return (
     <div className="px-4 py-6 md:px-6 md:py-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-        <section className="rounded-[2rem] bg-[linear-gradient(180deg,#fff8f4_0%,#fffdfb_100%)] p-5 shadow-[0_10px_35px_rgba(41,27,26,0.10)] md:p-8">
+        <section className="rounded-4xl bg-[linear-gradient(180deg,#fff8f4_0%,#fffdfb_100%)] p-5 shadow-[0_10px_35px_rgba(41,27,26,0.10)] md:p-8">
           <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
             <div className="rounded-3xl border border-surface-dark/10 bg-white/80 p-5 md:p-8">
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-surface-dark md:text-sm">

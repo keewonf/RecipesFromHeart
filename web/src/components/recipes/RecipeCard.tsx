@@ -26,7 +26,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
         }
       }}
     >
-      <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl bg-gray-100">
+      <div className="flex aspect-4/3 items-center justify-center overflow-hidden rounded-xl bg-gray-100">
         {recipe.imageUrl ? (
           <img
             src={recipe.imageUrl}
