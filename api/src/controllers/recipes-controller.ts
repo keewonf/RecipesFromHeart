@@ -287,20 +287,6 @@ class RecipesController {
 
     const skip = (page - 1) * perPage;
 
-    if (!req.user) {
-      throw new AppError("Usuário não encontrado", 401);
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: req.user.id,
-      },
-    });
-
-    if (!user) {
-      throw new AppError("Usuário não encontrado", 401);
-    }
-
     const recipes = await prisma.recipe.findMany({
       skip,
       take: perPage,

@@ -4,12 +4,15 @@ import { sessionsRoutes } from "./sessions-routes";
 import { ensureAuthenticated } from "@/middlewares/ensure-authenticated";
 import { recipesRoutes } from "./recipes-routes";
 import { uploadsRoutes } from "./uploads-routes";
+import { RecipesController } from "@/controllers/recipes-controller";
 
 const routes = Router();
+const recipesController = new RecipesController();
 
 //Public routes
 routes.use("/sessions", sessionsRoutes);
 routes.use("/users", usersRoutes);
+routes.get("/recipes", recipesController.community);
 
 //Private routes
 routes.use(ensureAuthenticated);
