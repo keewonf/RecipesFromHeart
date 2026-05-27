@@ -89,30 +89,13 @@ export function RecipeSuccess() {
       className="flex min-h-screen flex-col items-center justify-center bg-text-on-bg bg-cover bg-center px-4 py-6"
       style={{ backgroundImage: `url(${bgImg})` }}
     >
-      <div className="mt-6 mb-7 flex w-full max-w-4xl flex-col rounded-3xl bg-surface-light p-4 text-text-secondary shadow-[0_8px_30px_rgba(41,27,26,0.10)] md:p-6">
-        <div className="mb-4 text-center">
-          {showEditButton && (
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-text-primary/60">
-              Receita criada com sucesso
-            </p>
-          )}
-          <h1 className="mt-2 text-2xl font-normal leading-[140%] text-text-primary md:text-[2.5rem]">
-            {recipe.title}
-          </h1>
-        </div>
-
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-          {showEditButton && (
-            <Button
-              className="w-full px-4 text-sm sm:w-auto"
-              onClick={() =>
-                navigate(`/recipes/edit/${recipe.id}`, { state: recipe })
-              }
-            >
-              Editar receita
-            </Button>
-          )}
-          <Button variant="icon" onClick={handleDownloadHtml}>
+      <div className="relative mt-6 mb-7 flex w-full max-w-4xl flex-col rounded-3xl bg-surface-light p-4 text-text-secondary shadow-[0_8px_30px_rgba(41,27,26,0.10)] md:p-6">
+        <div className="absolute top-4 right-4 z-10">
+          <Button
+            variant="icon"
+            title="Baixar receita"
+            onClick={handleDownloadHtml}
+          >
             <Download />
           </Button>
         </div>
@@ -125,6 +108,26 @@ export function RecipeSuccess() {
 
         <main className="flex flex-col gap-6 p-0 md:p-6">
           <section id="about">
+            {showEditButton && (
+              <p className="mb-2 text-center text-sm font-semibold uppercase tracking-[0.2em] text-text-primary/60">
+                Receita criada com sucesso
+              </p>
+            )}
+            <h1 className="mb-4 text-center text-2xl font-normal leading-[140%] text-text-primary md:text-[2.5rem]">
+              {recipe.title}
+            </h1>
+            {showEditButton && (
+              <div className="mb-4 flex justify-center sm:justify-end">
+                <Button
+                  className="w-full px-4 text-sm sm:w-auto"
+                  onClick={() =>
+                    navigate(`/recipes/edit/${recipe.id}`, { state: recipe })
+                  }
+                >
+                  Editar receita
+                </Button>
+              </div>
+            )}
             <p className="text-sm leading-7 text-text-secondary md:text-base">
               {recipe.resume}
               <br />
