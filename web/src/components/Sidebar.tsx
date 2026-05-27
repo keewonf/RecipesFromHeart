@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import {
   Heart,
   Home,
@@ -42,11 +42,17 @@ export function Sidebar({ className, variant = "private" }: SidebarProps) {
   return (
     <aside className={classMerge(["bg-surface-light-dark", className])}>
       <div className="flex items-center justify-between gap-4 md:flex-col md:justify-start">
-        <img
-          src={logoSvg}
-          alt="Recipes From Heart"
-          className="h-10 w-auto md:my-4 md:h-auto"
-        />
+        <Link
+          to={isPublic ? "/" : "/home"}
+          aria-label="Ir para início"
+          className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-dark focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light-dark"
+        >
+          <img
+            src={logoSvg}
+            alt="Recipes From Heart"
+            className="h-10 w-auto md:my-4 md:h-auto"
+          />
+        </Link>
 
         {isPublic ? (
           <div className="flex items-center gap-2 md:hidden">
