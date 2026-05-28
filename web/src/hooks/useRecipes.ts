@@ -44,6 +44,7 @@ export function useRecipes({
       setLoading(true);
       setError(null);
 
+      // Favorites feature is not implemented yet
       if (type === "favorites") {
         setRecipes([]);
         setPagination({
@@ -81,10 +82,12 @@ export function useRecipes({
     }
   }
 
+  // Reset pagination when changing recipe source/type
   useEffect(() => {
     setCurrentPage(1);
   }, [type]);
 
+  // Refetch recipes whenever filters or pagination change
   useEffect(() => {
     fetchRecipes();
   }, [type, currentPage, perPage]);
