@@ -36,7 +36,7 @@ export function RecipeCard({ recipe, showEdit }: RecipeCardProps) {
               variant="icon"
               title="Editar receita"
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation(); // Prevent card click navigation when clicking edit button
                 navigate(`/recipes/edit/${recipe.id}`, { state: recipe });
               }}
             >

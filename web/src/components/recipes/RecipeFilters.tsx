@@ -1,3 +1,4 @@
+// Reserved for future recipe filtering/search logic
 export function RecipeFilters() {
   return (
     <div className="mb-4 rounded-2xl bg-white p-3 shadow-sm md:rounded-3xl md:p-4">

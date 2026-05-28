@@ -3,7 +3,7 @@ import { RecipeCard } from "./RecipeCard";
 import type { RecipeSummaryData } from "../../dtos/recipe";
 
 type RecipeListProps = {
-  recipes: readonly RecipeSummaryData[];
+  recipes: readonly RecipeSummaryData[]; // Read-only list to prevent accidental mutations inside the component
   loading?: boolean;
   pagination?: {
     page: number;
@@ -13,7 +13,7 @@ type RecipeListProps = {
   };
   onNext?: () => void;
   onPrevious?: () => void;
-  /** When true, show edit controls on each card (useful for /recipes/me) */
+  // When true, show edit controls on each card (useful for /recipes/me) 
   showEdit?: boolean;
 };
 

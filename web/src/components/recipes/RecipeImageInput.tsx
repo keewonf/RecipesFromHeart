@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+// Extend native input props while overriding
+// internal file input behaviors
 type Props = Omit<
   React.ComponentProps<"input">,
   "type" | "accept" | "onChange"
@@ -20,6 +22,7 @@ export function RecipeImageInput({
   id = "recipe-image",
   ...rest
 }: Props) {
+  // Stores the image currently displayed in the preview
   const [resolvedPreviewUrl, setResolvedPreviewUrl] = useState<string | null>(
     previewUrl,
   );
@@ -29,11 +32,12 @@ export function RecipeImageInput({
       setResolvedPreviewUrl(previewUrl);
       return;
     }
-
+    // Create a temporary local URL to preview the selected image
     const objectUrl = URL.createObjectURL(file);
     setResolvedPreviewUrl(objectUrl);
 
     return () => {
+      // Clean up temporary preview URL to avoid memory leaks
       URL.revokeObjectURL(objectUrl);
     };
   }, [file, previewUrl]);
