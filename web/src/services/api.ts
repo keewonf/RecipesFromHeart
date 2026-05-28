@@ -17,7 +17,7 @@ api.interceptors.request.use((config) => {
       config.headers.Authorization = `Bearer ${token}`;
     }
   } catch (e) {
-    // ignore (localStorage might be unavailable in some environments)
+    // ignore error so dont break app flow
   }
 
   return config;
@@ -29,12 +29,14 @@ api.interceptors.response.use(
   (error) => {
     const status = error?.response?.status;
     const requestUrl = String(error?.config?.url ?? "");
-
+    
+    // Auto logout only for expired/invalid authenticated requests,
+    // not for failed sign-in attempts
     if (status === 401 && !requestUrl.includes("/sessions")) {
       try {
         localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
         localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
-      } catch (_) {}
+      } catch (e) {}
       window.location.assign("/");
     }
     return Promise.reject(error);
