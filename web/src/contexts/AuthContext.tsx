@@ -7,6 +7,7 @@ type AuthContext = {
   remove: () => void;
 };
 
+// Shared key prefix for persisted auth session data
 const LOCAL_STORAGE_KEY = "@recipesFromHeart";
 
 export const AuthContext = createContext({} as AuthContext);
@@ -15,6 +16,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<null | UserAPIResponse>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Persist authenticated user session between page refreshes
   function save(data: UserAPIResponse) {
     localStorage.setItem(
       `${LOCAL_STORAGE_KEY}:user`,
@@ -29,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
   }
-
+  // Restore persisted session on app initialization
   function loadUser() {
     const user = localStorage.getItem(`${LOCAL_STORAGE_KEY}:user`);
     const token = localStorage.getItem(`${LOCAL_STORAGE_KEY}:token`);
@@ -41,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           user: JSON.parse(user),
         });
       } catch {
+        // Invalid/corrupted localStorage data should clear the session
         remove();
       }
     }
@@ -48,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }
 
+  // Load persisted auth session only once when app starts
   useEffect(() => {
     loadUser();
   }, []);
