@@ -377,24 +377,10 @@ class RecipesController {
   }
 
   // Returns a single recipe by id with access control:
-  // - public recipes can be viewed by anyone authenticated
-  // - private recipes are only accessible by the owner
+  // - public recipes can be viewed by anyone
+  // - private recipes are only accessible by the owner or an authenticated admin
   async show(req: Request, res: Response) {
     const { id } = paramsSchema.parse(req.params);
-
-    if (!req.user) {
-      throw new AppError("Usuário não encontrado", 401);
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: req.user.id,
-      },
-    });
-
-    if (!user) {
-      throw new AppError("Usuário não encontrado", 401);
-    }
 
     const recipe = await prisma.recipe.findUnique({
       where: {
@@ -441,9 +427,27 @@ class RecipesController {
       throw new AppError("Receita não encontrada", 404);
     }
 
-    // Return 404 for unauthorized private recipes to avoid leaking existence.
-    if (!recipe.isPublic && recipe.userId !== req.user.id) {
-      throw new AppError("Receita não encontrada", 404);
+    if (!recipe.isPublic) {
+      if (!req.user) {
+        throw new AppError("Receita não encontrada", 404);
+      }
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: req.user.id,
+        },
+      });
+
+      if (!user) {
+        throw new AppError("Usuário não encontrado", 401);
+      }
+
+      const isOwner = recipe.userId === req.user.id;
+      const isAdmin = req.user.role === "ADMIN";
+
+      if (!isOwner && !isAdmin) {
+        throw new AppError("Receita não encontrada", 404);
+      }
     }
 
     return res.json({ recipe });
