@@ -30,7 +30,9 @@ export function RecipeSuccess() {
       ? locationState.recipe
       : locationState;
   const showCreationMessage = Boolean(
-    locationState && "recipe" in locationState && locationState.showSuccessMessage,
+    locationState &&
+    "recipe" in locationState &&
+    locationState.showSuccessMessage,
   );
   const [recipe, setRecipe] = useState<RecipeSummaryData | null>(initialRecipe);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +83,8 @@ export function RecipeSuccess() {
   const ingredients = recipe?.ingredients ?? [];
   const ownerName = recipe?.user?.name ?? "Autor";
   const canEditRecipe = Boolean(
-    session?.user.id && recipe?.userId && session.user.id === recipe.userId,
+    (session?.user.id && recipe?.userId && session.user.id === recipe.userId) ||
+    (session?.user.id && session?.user.role === "ADMIN"),
   );
 
   const resumeText = recipe?.resume?.trim() ?? "";
@@ -102,7 +105,9 @@ export function RecipeSuccess() {
             <Button
               variant="icon"
               title="Baixar receita"
-              onClick={() => navigate(`/recipes/pdf/${recipe.id}`, { state: recipe })}
+              onClick={() =>
+                navigate(`/recipes/pdf/${recipe.id}`, { state: recipe })
+              }
             >
               <Download />
             </Button>
