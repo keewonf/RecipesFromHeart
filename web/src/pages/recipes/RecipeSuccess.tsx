@@ -5,6 +5,7 @@ import { Download } from "lucide-react";
 import recipeImg from "../../assets/main-image.png";
 import heartImg from "../../assets/heart.svg";
 import bgImg from "../../assets/bg-image.jpg";
+
 import { Button } from "../../components/Button";
 import { Loading } from "../../components/Loading";
 import { useAuth } from "../../hooks/useAuth";
@@ -29,9 +30,7 @@ export function RecipeSuccess() {
       ? locationState.recipe
       : locationState;
   const showCreationMessage = Boolean(
-    locationState &&
-    "recipe" in locationState &&
-    locationState.showSuccessMessage,
+    locationState && "recipe" in locationState && locationState.showSuccessMessage,
   );
   const [recipe, setRecipe] = useState<RecipeSummaryData | null>(initialRecipe);
   const [isLoading, setIsLoading] = useState(false);
@@ -88,10 +87,6 @@ export function RecipeSuccess() {
   const resumeText = recipe?.resume?.trim() ?? "";
   const preparationText = recipe?.preparationMethod?.trim() ?? "";
 
-  function handleDownloadHtml() {
-    console.log("cliquei aqui");
-  }
-
   if (!recipe || isLoading || recipe.ingredients === undefined) {
     return <Loading />;
   }
@@ -107,7 +102,7 @@ export function RecipeSuccess() {
             <Button
               variant="icon"
               title="Baixar receita"
-              onClick={handleDownloadHtml}
+              onClick={() => navigate(`/recipes/pdf/${recipe.id}`, { state: recipe })}
             >
               <Download />
             </Button>

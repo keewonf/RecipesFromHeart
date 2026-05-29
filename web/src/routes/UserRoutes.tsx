@@ -6,6 +6,7 @@ import { MyRecipes } from "../pages/recipes/MyRecipes";
 import { CreateRecipe } from "../pages/recipes/CreateRecipe";
 import { CommunityRecipes } from "../pages/recipes/CommunityRecipes";
 import { RecipeSuccess } from "../pages/recipes/RecipeSuccess";
+import { RecipePdf } from "../pages/recipes/RecipePdf";
 import { Profile } from "../pages/Profile";
 import { Favorites } from "../pages/recipes/Favorites";
 import { Home } from "../pages/Home";
@@ -23,6 +24,7 @@ export function UserRoutes() {
         <Route path="/recipes/edit/:id" element={<CreateRecipe />} />
         <Route path="/recipes/community" element={<CommunityRecipes />} />
         <Route path="/recipes/preview" element={<RecipeSuccess />} />
+        <Route path="/recipes/pdf/:id" element={<RecipePdf />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
