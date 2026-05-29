@@ -7,6 +7,8 @@ import { NotFound } from "../pages/NotFound";
 import { Help } from "../pages/Help";
 import { Home } from "../pages/Home";
 import { CommunityRecipes } from "../pages/recipes/CommunityRecipes";
+import { RecipeSuccess } from "../pages/recipes/RecipeSuccess";
+import { RecipePdf } from "../pages/recipes/RecipePdf";
 
 export function AuthRoutes() {
   return (
@@ -14,6 +16,8 @@ export function AuthRoutes() {
       <Route path="/" element={<PublicLayout />}>
         <Route index element={<Home />} />
         <Route path="/recipes/community" element={<CommunityRecipes />} />
+        <Route path="/recipes/preview" element={<RecipeSuccess />} />
+        <Route path="/recipes/pdf/:id" element={<RecipePdf />} />
       </Route>
       <Route path="/signin" element={<AuthLayout />}>
         <Route index element={<SignIn />} />
