@@ -39,7 +39,7 @@ export function RecipeSuccess() {
     const currentRecipe = recipe;
 
     if (!currentRecipe) {
-      navigate("/recipes/me", { replace: true });
+      navigate("/", { replace: true });
       return;
     }
 
@@ -64,7 +64,7 @@ export function RecipeSuccess() {
           return;
         }
 
-        navigate("/recipes/me", { replace: true });
+        navigate("/", { replace: true });
       } finally {
         setIsLoading(false);
       }

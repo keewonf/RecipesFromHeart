@@ -106,7 +106,7 @@ export function RecipePdf() {
     }
 
     if (!params.id) {
-      navigate("/recipes/me", { replace: true });
+      navigate("/", { replace: true });
       return;
     }
 
@@ -129,7 +129,7 @@ export function RecipePdf() {
           return;
         }
 
-        navigate("/recipes/me", { replace: true });
+        navigate("/", { replace: true });
       } finally {
         setIsLoading(false);
       }
