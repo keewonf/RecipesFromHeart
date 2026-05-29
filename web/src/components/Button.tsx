@@ -33,7 +33,7 @@ export function Button({
       ])}
       {...rest}
     >
-      {isLoading ? "Carregando..." : children}
+      {isLoading ? "..." : children}
     </button>
   );
 }
