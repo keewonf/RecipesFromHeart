@@ -217,7 +217,7 @@ export function RecipePdf() {
                 <h1 className="mb-4 text-center text-2xl font-normal leading-[140%] text-text-primary md:text-[2.5rem]">
                   {recipe.title}
                 </h1>
-                <p className="whitespace-pre-line text-sm leading-7 text-text-secondary md:text-base">
+                <p className="whitespace-pre-wrap break-words text-sm leading-7 text-text-secondary md:text-base">
                   {resumeText}
                   <br />
                   <br />
@@ -250,7 +250,7 @@ export function RecipePdf() {
                   Modo de preparo
                 </h2>
 
-                <p className="whitespace-pre-line text-sm leading-7 md:text-base">
+                <p className="whitespace-pre-wrap break-words text-sm leading-7 md:text-base">
                   {preparationText}
                 </p>
               </section>
