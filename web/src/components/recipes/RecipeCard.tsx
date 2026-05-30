@@ -12,7 +12,7 @@ export function RecipeCard({ recipe, showEdit }: RecipeCardProps) {
   const navigate = useNavigate();
 
   function handleOpenRecipe() {
-    navigate("/recipes/preview", { state: recipe });
+    navigate(`/recipes/preview/${recipe.id}`, { state: recipe });
   }
 
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { Download } from "lucide-react";
 
 import recipeImg from "../../assets/main-image.png";
@@ -24,6 +24,7 @@ export function RecipeSuccess() {
   const { session } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const params = useParams<{ id: string }>();
   const locationState = location.state as RecipeSuccessLocationState;
   const initialRecipe =
     locationState && "recipe" in locationState
@@ -39,28 +40,33 @@ export function RecipeSuccess() {
 
   useEffect(() => {
     const currentRecipe = recipe;
-
-    if (!currentRecipe) {
+    // Handles cases where the user enters this page from different entry points:
+    // - direct URL (/recipes/:id)
+    // - navigation with state (after create/view)
+    // If neither recipe state nor URL id exists, redirect to home.
+    if (!currentRecipe && !params.id) {
       navigate("/", { replace: true });
       return;
     }
 
-    if (currentRecipe.ingredients !== undefined) {
+    if (currentRecipe?.ingredients !== undefined) {
       return;
     }
 
-    const recipeId = currentRecipe.id;
+    const recipeId = currentRecipe?.id ?? params.id;
+    if (!recipeId) {
+      navigate("/", { replace: true });
+      return;
+    }
+
     const controller = new AbortController();
 
     async function loadRecipe() {
       try {
         setIsLoading(true);
-        const response = await api.get<RecipeResponse>(
-          `/public/recipes/${recipeId}`,
-          {
-            signal: controller.signal,
-          },
-        );
+        const response = await api.get<RecipeResponse>(`/recipes/${recipeId}`, {
+          signal: controller.signal,
+        });
 
         setRecipe(response.data.recipe);
       } catch (error) {
@@ -80,7 +86,7 @@ export function RecipeSuccess() {
     return () => {
       controller.abort();
     };
-  }, [navigate, recipe]);
+  }, [navigate, params.id, recipe, session?.user.id]);
 
   const previewImageUrl = recipe?.imageUrl ?? recipeImg;
   const ingredients = recipe?.ingredients ?? [];

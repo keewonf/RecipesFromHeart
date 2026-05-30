@@ -23,7 +23,7 @@ export function UserRoutes() {
         <Route path="/recipes/new" element={<CreateRecipe />} />
         <Route path="/recipes/edit/:id" element={<CreateRecipe />} />
         <Route path="/recipes/community" element={<CommunityRecipes />} />
-        <Route path="/recipes/preview" element={<RecipeSuccess />} />
+        <Route path="/recipes/preview/:id" element={<RecipeSuccess />} />
         <Route path="/recipes/pdf/:id" element={<RecipePdf />} />
       </Route>
       <Route path="*" element={<NotFound />} />

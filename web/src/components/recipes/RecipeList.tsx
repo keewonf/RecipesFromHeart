@@ -13,7 +13,7 @@ type RecipeListProps = {
   };
   onNext?: () => void;
   onPrevious?: () => void;
-  // When true, show edit controls on each card (useful for /recipes/me) 
+  // When true, show edit controls on each card
   showEdit?: boolean;
 };
 

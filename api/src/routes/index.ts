@@ -2,6 +2,7 @@ import { Router } from "express";
 import { usersRoutes } from "./users-routes";
 import { sessionsRoutes } from "./sessions-routes";
 import { ensureAuthenticated } from "@/middlewares/ensure-authenticated";
+import { maybeAuthenticated } from "../middlewares/maybe-authenticated";
 import { recipesRoutes } from "./recipes-routes";
 import { uploadsRoutes } from "./uploads-routes";
 import { RecipesController } from "@/controllers/recipes-controller";
@@ -15,7 +16,7 @@ routes.use("/users", usersRoutes);
 
 // Public endpoint for community/landing page (no authentication required)
 routes.get("/public/recipes", recipesController.community);
-routes.get("/public/recipes/:id", recipesController.show);
+routes.get("/recipes/:id", maybeAuthenticated, recipesController.show);
 
 //Private routes
 routes.use(ensureAuthenticated);

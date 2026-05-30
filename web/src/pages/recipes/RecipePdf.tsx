@@ -116,7 +116,7 @@ export function RecipePdf() {
       try {
         setIsLoading(true);
         const response = await api.get<RecipeResponse>(
-          `/public/recipes/${params.id}`,
+          `/recipes/${params.id}`,
           {
             signal: controller.signal,
           },

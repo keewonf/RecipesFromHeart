@@ -16,7 +16,7 @@ export function AuthRoutes() {
       <Route path="/" element={<PublicLayout />}>
         <Route index element={<Home />} />
         <Route path="/recipes/community" element={<CommunityRecipes />} />
-        <Route path="/recipes/preview" element={<RecipeSuccess />} />
+        <Route path="/recipes/preview/:id" element={<RecipeSuccess />} />
         <Route path="/recipes/pdf/:id" element={<RecipePdf />} />
       </Route>
       <Route path="/signin" element={<AuthLayout />}>

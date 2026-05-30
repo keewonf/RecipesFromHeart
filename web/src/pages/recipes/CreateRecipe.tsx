@@ -243,7 +243,7 @@ export function CreateRecipe() {
             )
           : await api.post<CreateRecipeResponse>("/recipes", payload);
 
-      navigate("/recipes/preview", {
+      navigate(`/recipes/preview/${response.data.recipe.id}`, {
         state: {
           recipe: response.data.recipe,
           showSuccessMessage: true,
