@@ -14,8 +14,8 @@ routes.use("/sessions", sessionsRoutes);
 routes.use("/users", usersRoutes);
 
 // Public endpoint for community/landing page (no authentication required)
-routes.get("/recipes", recipesController.community);
-routes.get("/recipes/:id", recipesController.show);
+routes.get("/public/recipes", recipesController.community);
+routes.get("/public/recipes/:id", recipesController.show);
 
 //Private routes
 routes.use(ensureAuthenticated);

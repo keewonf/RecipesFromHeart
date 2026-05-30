@@ -188,7 +188,7 @@ export function CreateRecipe() {
           });
         }
 
-        navigate("/recipes/me", { replace: true });
+        navigate("/users/me/recipes", { replace: true });
       } finally {
         if (isMounted) {
           setIsLoadingRecipe(false);
@@ -274,7 +274,7 @@ export function CreateRecipe() {
       if (window.history.length > 1) {
         navigate(-1);
       } else {
-        navigate("/recipes/me");
+        navigate("/users/me/recipes");
       }
     }
   }

@@ -56,10 +56,10 @@ export function useRecipes({
         return;
       }
 
-      let endpoint = "/recipes";
+      let endpoint = "/public/recipes";
 
       if (type === "mine") {
-        endpoint = "/recipes/me";
+        endpoint = "/users/me/recipes";
       }
 
       const response = await api.get<RecipesListResponse>(endpoint, {

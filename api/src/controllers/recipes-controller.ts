@@ -218,7 +218,7 @@ class RecipesController {
   }
 
   // Lists only the logged-in user's recipes with pagination and optional search filter
-  async index(req: Request, res: Response) {
+  async indexMyRecipes(req: Request, res: Response) {
     const { name, page, perPage } = querySchema.parse(req.query);
 
     // Calculate how many items to skip for pagination

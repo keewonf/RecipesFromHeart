@@ -55,9 +55,12 @@ export function RecipeSuccess() {
     async function loadRecipe() {
       try {
         setIsLoading(true);
-        const response = await api.get<RecipeResponse>(`/recipes/${recipeId}`, {
-          signal: controller.signal,
-        });
+        const response = await api.get<RecipeResponse>(
+          `/public/recipes/${recipeId}`,
+          {
+            signal: controller.signal,
+          },
+        );
 
         setRecipe(response.data.recipe);
       } catch (error) {

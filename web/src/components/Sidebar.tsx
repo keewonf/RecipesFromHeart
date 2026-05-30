@@ -106,7 +106,7 @@ export function Sidebar({ className, variant = "private" }: SidebarProps) {
           ) : (
             <>
               <li>
-                <NavLink to="/recipes/me" className={linkClass}>
+                <NavLink to="/users/me/recipes" className={linkClass}>
                   <Notebook size={18} />
                   <span>Minhas receitas</span>
                 </NavLink>

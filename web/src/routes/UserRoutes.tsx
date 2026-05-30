@@ -18,7 +18,7 @@ export function UserRoutes() {
         <Route index element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />
         <Route path="/profile/me" element={<Profile />} />
-        <Route path="/recipes/me" element={<MyRecipes />} />
+        <Route path="/users/me/recipes" element={<MyRecipes />} />
         <Route path="/recipes/favorites" element={<Favorites />} />
         <Route path="/recipes/new" element={<CreateRecipe />} />
         <Route path="/recipes/edit/:id" element={<CreateRecipe />} />
