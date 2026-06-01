@@ -69,7 +69,9 @@ export function RecipeCard({ recipe, showEdit }: RecipeCardProps) {
           Tempo: {recipe.preparationTime} min
         </p>
         <div className="mt-2 flex items-center justify-between gap-3 text-sm font-bold text-text-secondary">
-          <div>{recipe.portions} porções</div>
+          <div>
+            {recipe.portions} {recipe.portions === 1 ? "porção" : "porções"}
+          </div>
           <div className="text-yellow-500">
             {recipe.isPublic ? "Pública" : "Privada"}
           </div>
