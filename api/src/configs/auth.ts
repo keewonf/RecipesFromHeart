@@ -10,6 +10,6 @@ export const authConfig: {
 } = {
   jwt: {
     secret: env.JWT_SECRET,
-    expiresIn: "2d",
+    expiresIn: "14d",
   },
 };
