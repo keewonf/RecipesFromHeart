@@ -35,3 +35,13 @@ body {
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}

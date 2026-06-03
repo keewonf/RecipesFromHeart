@@ -1,5 +1,6 @@
 import { Pagination } from "../Pagination";
 import { RecipeCard } from "./RecipeCard";
+import { RecipeListSkeleton } from "./RecipeListSkeleton";
 import type { RecipeSummaryData } from "../../dtos/recipe";
 
 type RecipeListProps = {
@@ -28,7 +29,7 @@ export function RecipeList({
   const currentPage = pagination?.page ?? 1;
   const totalOfPage = pagination?.totalPages ?? 1;
 
-  if (loading) return <div className="p-4">Carregando...</div>;
+  if (loading) return <RecipeListSkeleton />;
 
   if (!recipes.length)
     return (
