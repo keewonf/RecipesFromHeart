@@ -13,3 +13,5 @@ npm-debug.log*
 .DS_Store
 
 /src/generated/prisma
+
+hash-password.js
