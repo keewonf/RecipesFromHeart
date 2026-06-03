@@ -13,11 +13,11 @@ recipesRoutes.patch("/:id", recipesController.update);
 recipesRoutes.delete("/:id", recipesController.delete);
 
 //Likes
-recipesRoutes.post("/:id/like", likesController.create);
+recipesRoutes.post("/:id/likes", likesController.create);
 recipesRoutes.delete("/:id/likes", likesController.delete);
 
 //Favorites
-recipesRoutes.post("/:id/favorite", favoritesController.create);
-recipesRoutes.delete("/:id/favorite", favoritesController.delete);
+recipesRoutes.post("/:id/favorites", favoritesController.create);
+recipesRoutes.delete("/:id/favorites", favoritesController.delete);
 
 export { recipesRoutes };
