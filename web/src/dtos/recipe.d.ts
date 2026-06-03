@@ -19,6 +19,10 @@ export type RecipeSummaryData = {
   portions: number;
   preparationMethod: string;
   isPublic: boolean;
+  likesCount: number;
+  favoritesCount: number;
+  likedByCurrentUser: boolean;
+  favoritedByCurrentUser: boolean;
   userId?: string;
   user?: {
     id: string;
