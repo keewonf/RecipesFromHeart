@@ -29,6 +29,8 @@ model User {
   profileImageKey String? @map("profile_image_key")
 
   recipes Recipe[]
+  likes RecipeLike[]
+  favorites RecipeFavorite[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -56,6 +58,8 @@ model Recipe {
   user User @relation(fields: [userId], references:[id], onDelete: Cascade)
 
   ingredients RecipeIngredient[]
+  likes RecipeLike[]
+  favorites RecipeFavorite[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -83,4 +87,38 @@ model RecipeIngredient {
   @@index([recipeId, position])
 
   @@map("recipe_ingredients")
+}
+
+model RecipeLike {
+  userId String @map("user_id")
+  recipeId String @map("recipe_id")
+
+  user User @relation(fields: [userId], references:[id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references:[id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([recipeId])
+  @@index([userId])
+
+  @@id([userId, recipeId])
+
+  @@map("recipe_likes")
+}
+
+model RecipeFavorite {
+  userId String @map("user_id")
+  recipeId String @map("recipe_id")
+
+  user User @relation(fields: [userId], references:[id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references:[id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([recipeId])
+  @@index([userId])
+  
+  @@id([userId, recipeId])
+
+  @@map("recipe_favorites")
 }
