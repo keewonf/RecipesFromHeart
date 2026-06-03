@@ -14,8 +14,8 @@ const recipesController = new RecipesController();
 routes.use("/sessions", sessionsRoutes);
 routes.use("/users", usersRoutes);
 
-// Public endpoint for community/landing page (no authentication required)
-routes.get("/public/recipes", recipesController.community);
+// Public endpoint for community/landing page (optional auth for current-user flags)
+routes.get("/public/recipes", maybeAuthenticated, recipesController.community);
 routes.get("/recipes/:id", maybeAuthenticated, recipesController.show);
 
 //Private routes

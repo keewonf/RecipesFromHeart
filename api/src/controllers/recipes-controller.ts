@@ -136,6 +136,129 @@ const querySchema = z.object({
   perPage: z.coerce.number().int().positive().max(50).optional().default(10),
 });
 
+type RecipeReactionState = {
+  // Expected Prisma response shape when recipe reaction counts/flags are selected.
+  _count: {
+    likes: number;
+    favorites: number;
+  };
+  likes?: Array<{ userId: string }>;
+  favorites?: Array<{ userId: string }>;
+};
+
+const recipeSummarySelect = {
+  // Base recipe selection.
+  id: true,
+  title: true,
+  resume: true,
+  preparationTime: true,
+  portions: true,
+  preparationMethod: true,
+  isPublic: true,
+  imageUrl: true,
+  imageKey: true,
+  createdAt: true,
+  updatedAt: true,
+  user: {
+    select: {
+      id: true,
+      name: true,
+      profileImageUrl: true,
+    },
+  },
+  _count: {
+    select: {
+      likes: true,
+      favorites: true,
+    },
+  },
+} as const;
+
+const recipeIngredientSelect = {
+  orderBy: {
+    position: "asc" as const,
+  },
+  select: {
+    id: true,
+    name: true,
+    quantity: true,
+    unit: true,
+    note: true,
+    position: true,
+  },
+} as const;
+
+function buildRecipeSummarySelect(currentUserId?: string) {
+  // Extends the base recipe selection with current user reaction state when available.
+  return {
+    ...recipeSummarySelect,
+    ...(currentUserId
+      ? {
+          likes: {
+            where: {
+              userId: currentUserId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+          favorites: {
+            where: {
+              userId: currentUserId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+        }
+      : {}),
+  };
+}
+
+function buildRecipeDetailSelect(currentUserId?: string) {
+  // Builds the detailed recipe selection including ingredients and user reaction state.
+  return {
+    ...recipeSummarySelect,
+    userId: true,
+    originalFilename: true,
+    ingredients: recipeIngredientSelect,
+    ...(currentUserId
+      ? {
+          likes: {
+            where: {
+              userId: currentUserId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+          favorites: {
+            where: {
+              userId: currentUserId,
+            },
+            select: {
+              userId: true,
+            },
+          },
+        }
+      : {}),
+  };
+}
+
+function formatRecipeResponse(
+  recipe: RecipeReactionState & Record<string, unknown>,
+) {
+  const { _count, likes, favorites, ...rest } = recipe;
+
+  return {
+    ...rest,
+    likesCount: _count.likes,
+    favoritesCount: _count.favorites,
+    likedByCurrentUser: Boolean(likes?.length),
+    favoritedByCurrentUser: Boolean(favorites?.length),
+  };
+}
+
 class RecipesController {
   async create(req: Request, res: Response) {
     const data = bodySchema.parse(req.body);
@@ -178,43 +301,10 @@ class RecipesController {
           create: ingredients,
         },
       },
-      select: {
-        id: true,
-        title: true,
-        resume: true,
-        preparationTime: true,
-        portions: true,
-        preparationMethod: true,
-        isPublic: true,
-        imageUrl: true,
-        imageKey: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            profileImageUrl: true,
-          },
-        },
-
-        ingredients: {
-          orderBy: {
-            position: "asc",
-          },
-          select: {
-            id: true,
-            name: true,
-            quantity: true,
-            unit: true,
-            note: true,
-            position: true,
-          },
-        },
-
-        createdAt: true,
-      },
+      select: buildRecipeDetailSelect(req.user.id),
     });
 
-    return res.status(201).json({ recipe });
+    return res.status(201).json({ recipe: formatRecipeResponse(recipe) });
   }
 
   // Lists only the logged-in user's recipes with pagination and optional search filter
@@ -255,26 +345,7 @@ class RecipesController {
       orderBy: {
         createdAt: "desc",
       },
-      select: {
-        id: true,
-        title: true,
-        resume: true,
-        preparationTime: true,
-        portions: true,
-        preparationMethod: true,
-        isPublic: true,
-        imageUrl: true,
-        imageKey: true,
-        createdAt: true,
-        updatedAt: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            profileImageUrl: true,
-          },
-        },
-      },
+      select: buildRecipeSummarySelect(req.user.id),
     });
 
     const totalRecords = await prisma.recipe.count({
@@ -294,7 +365,7 @@ class RecipesController {
     const totalPages = Math.ceil(totalRecords / perPage);
 
     return res.json({
-      recipes,
+      recipes: recipes.map(formatRecipeResponse),
       pagination: {
         page,
         perPage,
@@ -328,25 +399,7 @@ class RecipesController {
       orderBy: {
         createdAt: "desc",
       },
-      select: {
-        id: true,
-        title: true,
-        resume: true,
-        preparationTime: true,
-        portions: true,
-        isPublic: true,
-        imageUrl: true,
-        imageKey: true,
-        createdAt: true,
-        updatedAt: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            profileImageUrl: true,
-          },
-        },
-      },
+      select: buildRecipeSummarySelect(req.user?.id),
     });
 
     const totalRecords = await prisma.recipe.count({
@@ -366,7 +419,7 @@ class RecipesController {
     const totalPages = Math.ceil(totalRecords / perPage);
 
     return res.json({
-      recipes,
+      recipes: recipes.map(formatRecipeResponse),
       pagination: {
         page,
         perPage,
@@ -386,41 +439,7 @@ class RecipesController {
       where: {
         id,
       },
-      select: {
-        id: true,
-        title: true,
-        resume: true,
-        preparationTime: true,
-        portions: true,
-        preparationMethod: true,
-        isPublic: true,
-        imageUrl: true,
-        imageKey: true,
-        originalFilename: true,
-        userId: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            profileImageUrl: true,
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
-        ingredients: {
-          orderBy: {
-            position: "asc",
-          },
-          select: {
-            id: true,
-            name: true,
-            quantity: true,
-            unit: true,
-            note: true,
-            position: true,
-          },
-        },
-      },
+      select: buildRecipeDetailSelect(req.user?.id),
     });
 
     if (!recipe) {
@@ -450,7 +469,7 @@ class RecipesController {
       }
     }
 
-    return res.json({ recipe });
+    return res.json({ recipe: formatRecipeResponse(recipe) });
   }
 
   async update(req: Request, res: Response) {
@@ -474,6 +493,8 @@ class RecipesController {
     if (!user) {
       throw new AppError("Usuário não encontrado", 401);
     }
+
+    const currentUserId = req.user.id;
 
     const recipe = await prisma.recipe.findUnique({
       where: {
@@ -553,25 +574,15 @@ class RecipesController {
         where: {
           id: recipe.id,
         },
-
-        include: {
-          ingredients: {
-            orderBy: {
-              position: "asc",
-            },
-          },
-          user: {
-            select: {
-              id: true,
-              name: true,
-              profileImageUrl: true,
-            },
-          },
-        },
+        select: buildRecipeDetailSelect(currentUserId),
       });
     });
 
-    return res.json({ recipe: updatedRecipe });
+    if (!updatedRecipe) {
+      throw new AppError("Receita não encontrada", 404);
+    }
+
+    return res.json({ recipe: formatRecipeResponse(updatedRecipe) });
   }
 
   async delete(req: Request, res: Response) {
