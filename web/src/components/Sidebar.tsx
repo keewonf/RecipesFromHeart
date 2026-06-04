@@ -4,6 +4,7 @@ import {
   LogIn,
   LogOut,
   Notebook,
+  Star,
   User,
   UserPlus,
   Users,
@@ -105,6 +106,12 @@ export function Sidebar({ className, variant = "private" }: SidebarProps) {
             </>
           ) : (
             <>
+              <li>
+                <NavLink to="/recipes/favorites" className={linkClass}>
+                  <Star size={18} />
+                  <span>Favoritos</span>
+                </NavLink>
+              </li>
               <li>
                 <NavLink to="/users/me/recipes" className={linkClass}>
                   <Notebook size={18} />

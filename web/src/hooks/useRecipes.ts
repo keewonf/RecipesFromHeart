@@ -44,22 +44,12 @@ export function useRecipes({
       setLoading(true);
       setError(null);
 
-      // Favorites feature is not implemented yet
-      if (type === "favorites") {
-        setRecipes([]);
-        setPagination({
-          page: 1,
-          perPage,
-          totalRecords: 0,
-          totalPages: 1,
-        });
-        return;
-      }
-
       let endpoint = "/public/recipes";
 
       if (type === "mine") {
         endpoint = "/users/me/recipes";
+      } else if (type === "favorites") {
+        endpoint = "/users/me/favorites";
       }
 
       const response = await api.get<RecipesListResponse>(endpoint, {

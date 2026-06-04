@@ -15,5 +15,6 @@ usersRoutes.get(
   ensureAuthenticated,
   recipesController.indexMyRecipes,
 );
+usersRoutes.get("/me/favorites", ensureAuthenticated, recipesController.indexMyFavoritesRecipes)
 
 export { usersRoutes };

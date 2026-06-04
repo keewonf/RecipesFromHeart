@@ -8,7 +8,7 @@ import { CommunityRecipes } from "../pages/recipes/CommunityRecipes";
 import { RecipeSuccess } from "../pages/recipes/RecipeSuccess";
 import { RecipePdf } from "../pages/recipes/RecipePdf";
 import { Profile } from "../pages/Profile";
-import { Favorites } from "../pages/recipes/Favorites";
+import { Favorites } from "../pages/recipes/FavoritesRecipes";
 import { Home } from "../pages/Home";
 
 export function UserRoutes() {

@@ -376,6 +376,80 @@ class RecipesController {
     });
   }
 
+  async indexMyFavoritesRecipes(req: Request, res: Response) {
+    const { name, page, perPage } = querySchema.parse(req.query);
+
+    const skip = (page - 1) * perPage;
+
+    if (!req.user) {
+      throw new AppError("Usuário não encontrado", 401);
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.user.id,
+      },
+    });
+
+    if (!user) {
+      throw new AppError("Usuário não encontrado", 401);
+    }
+
+    const recipes = await prisma.recipe.findMany({
+      skip,
+      take: perPage,
+      where: {
+        favorites: {
+          some: {
+            userId: user.id,
+          },
+        },
+        ...(name
+          ? {
+              title: {
+                contains: name,
+                mode: "insensitive",
+              },
+            }
+          : {}),
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: buildRecipeSummarySelect(req.user.id),
+    });
+
+    const totalRecords = await prisma.recipe.count({
+      where: {
+        favorites: {
+          some: {
+            userId: user.id,
+          }
+        },
+        ...(name
+          ? {
+              title: {
+                contains: name,
+                mode: "insensitive",
+              },
+            }
+          : {}),
+      },
+    });
+
+    const totalPages = Math.ceil(totalRecords / perPage);
+
+    return res.json({
+      recipes: recipes.map(formatRecipeResponse),
+      pagination: {
+        page,
+        perPage,
+        totalRecords,
+        totalPages: totalPages > 0 ? totalPages : 1,
+      },
+    });
+  }
+
   // Lists community public recipes
   async community(req: Request, res: Response) {
     const { name, page, perPage } = querySchema.parse(req.query);
