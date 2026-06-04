@@ -496,7 +496,7 @@ export function CreateRecipe() {
                       render={({ field }) => (
                         <Input
                           legend="Unidade"
-                          placeholder="pote, colher, xícara"
+                          placeholder="pote, colher, xícara, ml, g"
                           {...field}
                         />
                       )}
