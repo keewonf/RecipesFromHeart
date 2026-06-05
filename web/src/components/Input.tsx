@@ -3,9 +3,17 @@ import { classMerge } from "../utils/classMerge";
 type Props = React.ComponentProps<"input"> & {
   legend?: string;
   error?: string;
+  startIcon?: React.ReactNode;
 };
 
-export function Input({ legend, error, type = "text", ...rest }: Props) {
+export function Input({
+  legend,
+  error,
+  type = "text",
+  className,
+  startIcon,
+  ...rest
+}: Props) {
   return (
     <fieldset className="flex flex-1 flex-col text-surface-dark">
       {legend && (
@@ -13,14 +21,23 @@ export function Input({ legend, error, type = "text", ...rest }: Props) {
           {legend}
         </legend>
       )}
-      <input
-        type={type}
-        className={classMerge(
-          "w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-sm font-bold text-gray-600 outline-none transition-colors placeholder:uppercase placeholder:text-gray-600/90 focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10 md:rounded-3xl md:text-base",
-          error && "border-red-500 focus:border-red-500 focus:ring-red-500/10",
+      <div className="relative">
+        {startIcon && (
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+            {startIcon}
+          </span>
         )}
-        {...rest}
-      />
+        <input
+          type={type}
+          className={classMerge(
+            "w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-sm font-bold text-gray-600 outline-none transition-colors placeholder:uppercase placeholder:text-gray-600/90 focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10 md:rounded-3xl md:text-base",
+            startIcon && "pl-11",
+            error && "border-red-500 focus:border-red-500 focus:ring-red-500/10",
+            className,
+          )}
+          {...rest}
+        />
+      </div>
       <span className="block min-h-4.5 text-xs text-red-500">{error}</span>
     </fieldset>
   );
