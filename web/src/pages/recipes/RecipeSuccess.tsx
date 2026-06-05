@@ -170,7 +170,7 @@ export function RecipeSuccess() {
                     key={`${ingredient.name}-${ingredient.quantity}-${ingredient.unit}`}
                   >
                     {ingredient.quantity}
-                    {ingredient.unit ? ` ${ingredient.unit} de` : ""} de{" "}
+                    {ingredient.unit ? ` ${ingredient.unit} de` : ""}{" "}
                     {ingredient.name}
                     {ingredient.note ? ` (${ingredient.note})` : ""}
                   </li>
