@@ -6,6 +6,7 @@ import type { RecipeSummaryData, RecipesListResponse } from "../dtos/recipe";
 
 type UseRecipesParams = {
   type: "mine" | "community" | "favorites";
+  search?: string;
   perPage?: number;
 };
 
@@ -24,6 +25,7 @@ const DEFAULT_PER_PAGE = 10;
 
 export function useRecipes({
   type,
+  search,
   perPage = DEFAULT_PER_PAGE,
 }: UseRecipesParams): UseRecipesResult {
   const [recipes, setRecipes] = useState<RecipeSummaryData[]>([]);
@@ -56,6 +58,7 @@ export function useRecipes({
         params: {
           page,
           perPage,
+          name: search,
         },
       });
 
@@ -75,12 +78,12 @@ export function useRecipes({
   // Reset pagination when changing recipe source/type
   useEffect(() => {
     setCurrentPage(1);
-  }, [type]);
+  }, [type, search]);
 
   // Refetch recipes whenever filters or pagination change
   useEffect(() => {
     fetchRecipes();
-  }, [type, currentPage, perPage]);
+  }, [type, currentPage, perPage, search]);
 
   function goToNextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, pagination.totalPages));
