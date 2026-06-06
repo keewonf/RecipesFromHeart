@@ -10,7 +10,7 @@ type Props = {
 
 export function Pagination({ current, total, onNext, onPrevious }: Props) {
   return (
-    <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+    <div className="mt-4 flex items-center justify-center gap-3 sm:gap-4">
       <Button variant="icon" onClick={onPrevious} disabled={current === 1}>
         <ArrowLeft />
       </Button>
