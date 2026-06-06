@@ -131,6 +131,7 @@ export function CreateRecipe() {
     formState: { isSubmitting, errors },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(recipeSchema),
+    shouldFocusError: true,
     defaultValues: {
       title: "",
       resume: "",
@@ -326,7 +327,6 @@ export function CreateRecipe() {
             render={({ field, fieldState }) => (
               <Input
                 legend="Título"
-                required
                 placeholder="Título da receita"
                 error={fieldState.error?.message}
                 {...field}
@@ -340,7 +340,6 @@ export function CreateRecipe() {
             render={({ field, fieldState }) => (
               <Input
                 legend="Resumo"
-                required
                 error={fieldState.error?.message}
                 placeholder="Fale um pouco sobre sua receita"
                 {...field}
@@ -355,7 +354,6 @@ export function CreateRecipe() {
               render={({ field, fieldState }) => (
                 <Input
                   legend="Tempo de preparo (min)"
-                  required
                   error={fieldState.error?.message}
                   type="number"
                   placeholder="0"
@@ -375,7 +373,6 @@ export function CreateRecipe() {
               render={({ field, fieldState }) => (
                 <Input
                   legend="Porções"
-                  required
                   type="number"
                   error={fieldState.error?.message}
                   placeholder="0"
@@ -523,7 +520,6 @@ export function CreateRecipe() {
                       render={({ field, fieldState }) => (
                         <Input
                           legend="Ingrediente"
-                          required
                           error={fieldState.error?.message}
                           placeholder="Manteiga"
                           {...field}
@@ -570,9 +566,12 @@ export function CreateRecipe() {
                   className="min-h-40 rounded-2xl border border-gray-300 bg-white px-4 py-3.5 text-sm font-bold text-gray-600 outline-none transition-colors placeholder:uppercase placeholder:text-gray-600/90 focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10 md:rounded-3xl"
                 />
                 {fieldState.error && (
-                  <span className="block min-h-4.5 text-xs text-red-500">
-                    {fieldState.error?.message}
-                  </span>
+                  <p
+                    role="alert"
+                    className="mt-1 text-[13px] font-medium text-red-500"
+                  >
+                    {fieldState.error.message}
+                  </p>
                 )}
               </fieldset>
             )}

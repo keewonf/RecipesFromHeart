@@ -39,7 +39,11 @@ export function Input({
           {...rest}
         />
       </div>
-      <span className="block min-h-4.5 text-xs text-red-500">{error}</span>
+      {error && (
+        <p role="alert" className="mt-1 text-[13px] font-medium text-red-500">
+          {error}
+        </p>
+      )}
     </fieldset>
   );
 }
