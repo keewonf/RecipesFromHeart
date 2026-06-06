@@ -64,7 +64,7 @@ export function RecipeImageInput({
         htmlFor={id}
         className="group flex min-h-64 cursor-pointer flex-col overflow-hidden rounded-3xl border border-dashed border-gray-300 bg-white shadow-[0_1px_8px_rgba(41,27,26,0.06)] transition-colors duration-200 hover:border-surface-dark"
       >
-        <div className="flex h-64 flex-1 items-center justify-center overflow-hidden bg-surface-light-dark/40">
+        <div className="flex h-64 sm:h-80 md:h-100 items-center justify-center overflow-hidden bg-surface-light-dark/40">
           {resolvedPreviewUrl ? (
             <img
               src={resolvedPreviewUrl}
