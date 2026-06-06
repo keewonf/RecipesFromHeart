@@ -134,6 +134,10 @@ const querySchema = z.object({
   name: z.string().trim().optional().default(""),
   page: z.coerce.number().int().positive().optional().default(1),
   perPage: z.coerce.number().int().positive().max(50).optional().default(10),
+  sortBy: z
+    .enum(["newest", "oldest", "mostLiked", "mostFavorited"])
+    .optional()
+    .default("newest"),
 });
 
 type RecipeReactionState = {
@@ -424,7 +428,7 @@ class RecipesController {
         favorites: {
           some: {
             userId: user.id,
-          }
+          },
         },
         ...(name
           ? {
@@ -452,9 +456,35 @@ class RecipesController {
 
   // Lists community public recipes
   async community(req: Request, res: Response) {
-    const { name, page, perPage } = querySchema.parse(req.query);
+    const { name, page, perPage, sortBy } = querySchema.parse(req.query);
 
     const skip = (page - 1) * perPage;
+
+    let orderBy;
+
+    switch (sortBy) {
+      case "oldest":
+        orderBy = [{ createdAt: "asc" as const }, { id: "asc" as const }];
+        break;
+
+      case "mostLiked":
+        orderBy = [
+          { likes: { _count: "desc" as const } },
+          { createdAt: "desc" as const },
+        ];
+        break;
+
+      case "mostFavorited":
+        orderBy = [
+          { favorites: { _count: "desc" as const } },
+          { createdAt: "desc" as const },
+        ];
+        break;
+
+      case "newest":
+      default:
+        orderBy = [{ createdAt: "desc" as const }, { id: "desc" as const }];
+    }
 
     const recipes = await prisma.recipe.findMany({
       skip,
@@ -470,9 +500,7 @@ class RecipesController {
             }
           : {}),
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy,
       select: buildRecipeSummarySelect(req.user?.id),
     });
 

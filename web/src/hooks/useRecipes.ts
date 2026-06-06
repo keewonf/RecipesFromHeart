@@ -4,9 +4,12 @@ import axios from "axios";
 import { api } from "../services/api";
 import type { RecipeSummaryData, RecipesListResponse } from "../dtos/recipe";
 
+type SortOption = "newest" | "oldest" | "mostLiked" | "mostFavorited";
+
 type UseRecipesParams = {
   type: "mine" | "community" | "favorites";
   search?: string;
+  sortBy?: SortOption;
   perPage?: number;
 };
 
@@ -27,6 +30,7 @@ export function useRecipes({
   type,
   search,
   perPage = DEFAULT_PER_PAGE,
+  sortBy,
 }: UseRecipesParams): UseRecipesResult {
   const [recipes, setRecipes] = useState<RecipeSummaryData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +63,7 @@ export function useRecipes({
           page,
           perPage,
           name: search,
+          sortBy,
         },
       });
 
@@ -78,12 +83,12 @@ export function useRecipes({
   // Reset pagination when changing recipe source/type
   useEffect(() => {
     setCurrentPage(1);
-  }, [type, search]);
+  }, [type, search, sortBy]);
 
   // Refetch recipes whenever filters or pagination change
   useEffect(() => {
     fetchRecipes();
-  }, [type, currentPage, perPage, search]);
+  }, [type, currentPage, perPage, search, sortBy]);
 
   function goToNextPage() {
     setCurrentPage((prev) => Math.min(prev + 1, pagination.totalPages));
