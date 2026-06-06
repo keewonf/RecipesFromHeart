@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Input } from "./Input";
 import { Search as SearchIcon } from "lucide-react";
 
-type SearchBarProps = {
+type Props = {
   onSearch: (term: string) => void;
 };
 
@@ -20,7 +20,7 @@ function useDebounce<T>(value: T, delay: number) {
   return debouncedValue;
 }
 
-export function SearchBar({ onSearch }: SearchBarProps) {
+export function SearchBar({ onSearch }: Props) {
   const [search, setSearch] = useState("");
 
   const debouncedSearch = useDebounce(search, 500);
@@ -34,7 +34,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       required
-      placeholder="Pesquisar pelo nome"
+      placeholder="Pesquisar Nome"
       startIcon={<SearchIcon size={18} />}
     />
   );
