@@ -24,7 +24,7 @@ type UseRecipesResult = {
   goToPreviousPage: () => void;
 };
 
-const DEFAULT_PER_PAGE = 10;
+const DEFAULT_PER_PAGE = 6;
 
 export function useRecipes({
   type,
