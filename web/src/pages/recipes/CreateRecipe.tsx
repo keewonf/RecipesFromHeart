@@ -30,8 +30,14 @@ export const ingredientSchema = z.object({
 });
 
 export const recipeFormFieldsSchema = z.object({
-  title: z.string().trim().min(5, "Bote um título descritivo"),
-  resume: z.string().trim().min(5, "Adicione um resumo para sua receita"),
+  title: z
+    .string()
+    .trim()
+    .min(5, "Bote um título descritivo (mínimo de 5 caracteres)"),
+  resume: z
+    .string()
+    .trim()
+    .min(5, "Adicione um resumo para sua receita (mínimo de 5 caracteres)"),
   preparationTime: z.coerce
     .number()
     .int()
@@ -45,7 +51,10 @@ export const recipeFormFieldsSchema = z.object({
   preparationMethod: z
     .string()
     .trim()
-    .min(10, "Defina um método de preparo detalhado!"),
+    .min(
+      10,
+      "Defina um método de preparo detalhado! (mínimo de 10 caracteres)",
+    ),
 });
 
 const emptyIngredient = {
@@ -314,11 +323,12 @@ export function CreateRecipe() {
           <Controller
             control={control}
             name="title"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <Input
                 legend="Título"
                 required
                 placeholder="Título da receita"
+                error={fieldState.error?.message}
                 {...field}
               />
             )}
@@ -327,10 +337,11 @@ export function CreateRecipe() {
           <Controller
             control={control}
             name="resume"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <Input
                 legend="Resumo"
                 required
+                error={fieldState.error?.message}
                 placeholder="Fale um pouco sobre sua receita"
                 {...field}
               />
@@ -341,10 +352,11 @@ export function CreateRecipe() {
             <Controller
               control={control}
               name="preparationTime"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <Input
                   legend="Tempo de preparo (min)"
                   required
+                  error={fieldState.error?.message}
                   type="number"
                   placeholder="0"
                   {...field}
@@ -360,11 +372,12 @@ export function CreateRecipe() {
             <Controller
               control={control}
               name="portions"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <Input
                   legend="Porções"
                   required
                   type="number"
+                  error={fieldState.error?.message}
                   placeholder="0"
                   {...field}
                   value={normalizeNumberInputValue(field.value)}
@@ -481,10 +494,11 @@ export function CreateRecipe() {
                     <Controller
                       control={control}
                       name={`ingredients.${index}.quantity`}
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <Input
                           legend="Quantidade"
                           placeholder="1/2"
+                          error={fieldState.error?.message}
                           {...field}
                         />
                       )}
@@ -493,9 +507,10 @@ export function CreateRecipe() {
                     <Controller
                       control={control}
                       name={`ingredients.${index}.unit`}
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <Input
                           legend="Unidade"
+                          error={fieldState.error?.message}
                           placeholder="pote, colher, xícara, ml, g"
                           {...field}
                         />
@@ -505,10 +520,11 @@ export function CreateRecipe() {
                     <Controller
                       control={control}
                       name={`ingredients.${index}.name`}
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <Input
                           legend="Ingrediente"
                           required
+                          error={fieldState.error?.message}
                           placeholder="Manteiga"
                           {...field}
                         />
@@ -518,9 +534,10 @@ export function CreateRecipe() {
                     <Controller
                       control={control}
                       name={`ingredients.${index}.note`}
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <Input
                           legend="Observação"
+                          error={fieldState.error?.message}
                           placeholder="Em temperatura ambiente"
                           {...field}
                         />
@@ -542,7 +559,7 @@ export function CreateRecipe() {
           <Controller
             control={control}
             name="preparationMethod"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <fieldset className="flex flex-1 flex-col text-surface-dark">
                 <legend className="mb-2 uppercase text-xxs text-text-primary md:text-xs">
                   Método de preparo
@@ -552,6 +569,11 @@ export function CreateRecipe() {
                   placeholder="Explique o método de preparo"
                   className="min-h-40 rounded-2xl border border-gray-300 bg-white px-4 py-3.5 text-sm font-bold text-gray-600 outline-none transition-colors placeholder:uppercase placeholder:text-gray-600/90 focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10 md:rounded-3xl"
                 />
+                {fieldState.error && (
+                  <span className="block min-h-4.5 text-xs text-red-500">
+                    {fieldState.error?.message}
+                  </span>
+                )}
               </fieldset>
             )}
           />

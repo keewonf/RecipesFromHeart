@@ -32,7 +32,8 @@ export function Input({
           className={classMerge(
             "w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-sm font-bold text-gray-600 outline-none transition-colors placeholder:uppercase placeholder:text-gray-600/90 focus:border-surface-dark focus:ring-2 focus:ring-surface-dark/10 md:rounded-3xl md:text-base",
             startIcon && "pl-11",
-            error && "border-red-500 focus:border-red-500 focus:ring-red-500/10",
+            error &&
+              "border-red-500 focus:border-red-500 focus:ring-red-500/10",
             className,
           )}
           {...rest}
