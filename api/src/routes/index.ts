@@ -10,6 +10,11 @@ import { RecipesController } from "@/controllers/recipes-controller";
 const routes = Router();
 const recipesController = new RecipesController();
 
+//Health Check
+routes.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 //Public routes
 routes.use("/sessions", sessionsRoutes);
 routes.use("/users", usersRoutes);
